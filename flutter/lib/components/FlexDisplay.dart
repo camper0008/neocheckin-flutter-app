@@ -50,7 +50,7 @@ class _FlexDisplayState extends State<FlexDisplay> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsets.fromLTRB(0, 0, 40, 0), 
+          padding: EdgeInsets.only(right: 40), 
           child: Image(
             image: AssetImage('assets/images/placeholder.png')
           ),
@@ -94,7 +94,7 @@ class _FlexDisplayState extends State<FlexDisplay> {
               ])
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(0, 36, 0, 0),
+              padding: const EdgeInsets.only(top: 36),
               child: RichText(
                 textScaleFactor: 2.5,
                 text: TextSpan(
