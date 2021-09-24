@@ -53,7 +53,7 @@ class _HomePageState extends State<HomePage> {
               padding: EdgeInsets.only(top: 36), 
               child: Option(
                 selected: _optionSelected, 
-                options: ['1', '2', '3'], 
+                options: ['zero', 'one', 'two'], 
                 stateFunction: _setOption
               ),
             ),

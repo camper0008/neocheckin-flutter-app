@@ -13,16 +13,13 @@ class Option extends StatefulWidget {
 
 class _OptionState extends State<Option> {
 
-  late List<bool> _selected;
+  late int _selected;
   late List<String> _options;
   late Function(int) _updateParentState;
 
   _updateSelfState(int selected, List<String> options, Function(int) updateParentState) {
-    List<bool> list = List.filled(options.length, false);
-    list[selected] = true;
-
     _updateParentState = updateParentState;
-    _selected = list;
+    _selected = selected;
     _options = options;
   }
     @override
@@ -36,25 +33,43 @@ class _OptionState extends State<Option> {
     _updateSelfState(widget.selected, widget.options, widget.stateFunction);
   }
 
-
   @override
   Widget build(BuildContext context) {
-    return ToggleButtons(
-      children: _options.map((text) => 
-      Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-          child: Text(
-            '$text',
-            style: TextStyle(
-              fontSize: 32,
+  print(_selected);
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: _options.asMap().entries.map((entry) => 
+        Container(margin: EdgeInsets.symmetric(horizontal: 10),
+          child: (entry.key == _selected)
+          ? ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              shadowColor: Colors.transparent,
             ),
+            onPressed: () {_updateParentState(entry.key);},
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Text(
+                entry.value,
+                style: TextStyle(
+                  fontSize: 24,
+                )
+              ),
+            ),
+          )
+          : OutlinedButton(
+            onPressed: () {_updateParentState(entry.key);},
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Text(
+                entry.value,
+                style: TextStyle(
+                  fontSize: 24,
+                )
+              ),
+            )
           ),
         ),
-      ).toList(),
-      onPressed: (int index) {
-        this._updateParentState(index);
-      },
-      isSelected: _selected,
+      ).toList()
     );
   }
 }
