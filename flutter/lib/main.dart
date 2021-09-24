@@ -34,22 +34,10 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _optionSelected = 0;
   Time _flex = new Time();
-  List<bool> _isSelected = [true, false, false];
 
   void _setOption(int option) {
     setState(() {
       _optionSelected = option;
-    });
-  }
-
-  void _incFlex(/*int flex*/) {
-    setState(() {
-      _flex.addSeconds(60); //flex;
-    });
-  }
-  void _decFlex(/*int flex*/) {
-    setState(() {
-      _flex.addSeconds(-60); //flex;
     });
   }
 
@@ -63,7 +51,11 @@ class _HomePageState extends State<HomePage> {
             FlexDisplay(flex: _flex),
             Padding(
               padding: EdgeInsets.only(top: 36), 
-              child: Option(selected: 2, options: ['1', '2', '3']),
+              child: Option(
+                selected: _optionSelected, 
+                options: ['1', '2', '3'], 
+                stateFunction: _setOption
+              ),
             ),
           ],
         ),

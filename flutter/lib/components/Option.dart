@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 class Option extends StatefulWidget {
   final int selected;
   final List<String> options;
+  final Function(int) stateFunction;
 
-  Option({required this.selected, required this.options});
+  Option({required this.selected, required this.options, required this.stateFunction});
 
   @override
   State<Option> createState() => _OptionState();
@@ -14,23 +15,25 @@ class _OptionState extends State<Option> {
 
   late List<bool> _selected;
   late List<String> _options;
+  late Function(int) _updateParentState;
 
-  _updateState(int selected, List<String> options) {
+  _updateSelfState(int selected, List<String> options, Function(int) updateParentState) {
     List<bool> list = List.filled(options.length, false);
     list[selected] = true;
 
+    _updateParentState = updateParentState;
     _selected = list;
     _options = options;
   }
     @override
   void initState() {
     super.initState();
-    _updateState(widget.selected, widget.options);
+    _updateSelfState(widget.selected, widget.options, widget.stateFunction);
   }
   @override
   void didUpdateWidget(Option oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _updateState(widget.selected, widget.options);
+    _updateSelfState(widget.selected, widget.options, widget.stateFunction);
   }
 
 
@@ -49,15 +52,7 @@ class _OptionState extends State<Option> {
         ),
       ).toList(),
       onPressed: (int index) {
-        setState(() {
-          for (int buttonIndex = 0; buttonIndex < _selected.length; buttonIndex++) {
-            if (buttonIndex == index) {
-              _selected[buttonIndex] = true;
-            } else {
-              _selected[buttonIndex] = false;
-            }
-          }
-        });
+        this._updateParentState(index);
       },
       isSelected: _selected,
     );
