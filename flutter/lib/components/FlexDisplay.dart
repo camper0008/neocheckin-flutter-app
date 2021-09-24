@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:ui';
 import '../utils/Time.dart';
 
 class FlexDisplay extends StatefulWidget {
@@ -15,14 +16,20 @@ class _FlexDisplayState extends State<FlexDisplay> {
   late String _flexMinutes;
   late String _flexPrefix;
   late Color _flexColor;
+  late String _stateText;
 
-  _updateState(Time flex) {
+  _updateState(Time flex, [ bool checkedIn = true ]) {
     _flexHours = flex.getFormattedHours();
     _flexMinutes = flex.getFormattedMinutes();
 
     bool isNegative = flex.isNegative();
-    _flexPrefix = isNegative ? '-' : ' ';
+    _flexPrefix = isNegative ? '-' : '+';
     _flexColor = isNegative ? Colors.red : Colors.green;
+
+    if (checkedIn)
+      _stateText = "Du er nu checket ind";
+    else
+      _stateText = "Du er nu checket ud";
   }
 
   @override
@@ -64,15 +71,22 @@ class _FlexDisplayState extends State<FlexDisplay> {
                     ),
                     TextSpan(
                       text: '$_flexPrefix$_flexHours', 
-                      style: TextStyle(color: _flexColor)
+                      style: TextStyle(
+                        color: _flexColor,
+                        fontFamily: 'RobotoMono',
+                      ),
                     ),
                     TextSpan(
-                      text: ':'
+                      text: ':',
+                      style: TextStyle(
+                        fontSize: 16
+                      ),
                     ),
                     TextSpan(
                       text: '$_flexMinutes', 
                       style: TextStyle(
-                        color: _flexColor
+                        color: _flexColor,
+                        fontFamily: 'RobotoMono',
                       ),
                     ),
                   ]
@@ -84,7 +98,7 @@ class _FlexDisplayState extends State<FlexDisplay> {
               child: RichText(
                 textScaleFactor: 2.5,
                 text: TextSpan(
-                  text: 'Du er nu checket ind',
+                  text: '$_stateText',
                   style: TextStyle(
                     color: Colors.green,
                   ),
