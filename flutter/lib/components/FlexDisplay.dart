@@ -18,7 +18,7 @@ class _FlexDisplayState extends State<FlexDisplay> {
   late Color _flexColor;
   late String _stateText;
 
-  _updateState(Time flex, [ bool checkedIn = true ]) {
+  _updateSelfState(Time flex, [ bool checkedIn = true ]) {
     _flexHours = flex.getFormattedHours();
     _flexMinutes = flex.getFormattedMinutes();
 
@@ -35,12 +35,12 @@ class _FlexDisplayState extends State<FlexDisplay> {
   @override
   void initState() {
     super.initState();
-    _updateState(widget.flex);
+    _updateSelfState(widget.flex);
   }
   @override
   void didUpdateWidget(FlexDisplay oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _updateState(widget.flex);
+    _updateSelfState(widget.flex);
   }
 
   @override
