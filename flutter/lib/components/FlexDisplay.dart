@@ -58,56 +58,54 @@ class _FlexDisplayState extends State<FlexDisplay> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text(
+              'Mikkel Troels Conststed',
+              style: TextStyle(
+                fontSize: (14*2),
+              ),
+            ),
             RichText(
-              textScaleFactor: 2,
-              text: TextSpan(children: <TextSpan>[
-                TextSpan(
-                  text: 'Mikkel Troels Conststed\n', 
-                ),
-                TextSpan(
-                  children: <TextSpan>[
-                    TextSpan(
-                      text: 'Flex: '
+              text: TextSpan(
+                style: TextStyle(fontSize: (14*2)),
+                children: <TextSpan>[
+                  TextSpan(
+                    text: 'Flex: '
+                  ),
+                  TextSpan(
+                    text: '$_flexPrefix$_flexHours', 
+                    style: TextStyle(
+                      color: _flexColor,
+                      fontFamily: 'RobotoMono',
                     ),
-                    TextSpan(
-                      text: '$_flexPrefix$_flexHours', 
-                      style: TextStyle(
-                        color: _flexColor,
-                        fontFamily: 'RobotoMono',
-                      ),
+                  ),
+                  TextSpan(
+                    text: ':',
+                    style: TextStyle(
+                      fontSize: 16
                     ),
-                    TextSpan(
-                      text: ':',
-                      style: TextStyle(
-                        fontSize: 16
-                      ),
+                  ),
+                  TextSpan(
+                    text: '$_flexMinutes', 
+                    style: TextStyle(
+                      color: _flexColor,
+                      fontFamily: 'RobotoMono',
                     ),
-                    TextSpan(
-                      text: '$_flexMinutes', 
-                      style: TextStyle(
-                        color: _flexColor,
-                        fontFamily: 'RobotoMono',
-                      ),
-                    ),
-                  ]
-                ),
-              ])
+                  ),
+                ],
+              ),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 36),
-              child: RichText(
-                textScaleFactor: 2.5,
-                text: TextSpan(
-                  text: '$_stateText',
-                  style: TextStyle(
-                    color: Colors.green,
-                  ),
+              child: Text(
+                '$_stateText',
+                style: TextStyle(
+                  fontSize: (14*2.5),
+                  color: Colors.green
                 ),
-              ),
+              )
             ),
           ],
-        )
-        
+        ),
       ],
     );
   }
