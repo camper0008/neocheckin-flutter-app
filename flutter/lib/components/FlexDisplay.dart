@@ -80,9 +80,6 @@ class _FlexDisplayState extends State<FlexDisplay> {
                   ),
                   TextSpan(
                     text: ':',
-                    style: TextStyle(
-                      fontSize: 16
-                    ),
                   ),
                   TextSpan(
                     text: '$_flexMinutes', 
