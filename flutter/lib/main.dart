@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:neocheckin/components/Option.dart';
 import '/components/FlexDisplay.dart';
 import 'utils/Time.dart';
 
@@ -31,14 +32,15 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  //int _optionSelected = 0;
+  int _optionSelected = 0;
   Time _flex = new Time();
+  List<bool> _isSelected = [true, false, false];
 
-  //void _setOption(int option) {
-  //  setState(() {
-  //    _optionSelected = option;
-  //  });
-  //}
+  void _setOption(int option) {
+    setState(() {
+      _optionSelected = option;
+    });
+  }
 
   void _incFlex(/*int flex*/) {
     setState(() {
@@ -51,8 +53,6 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,8 +61,10 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             FlexDisplay(flex: _flex),
-            TextButton(onPressed: _incFlex, child: Text('Increase')),
-            TextButton(onPressed: _decFlex, child: Text('Decrease')),
+            Padding(
+              padding: EdgeInsets.only(top: 36), 
+              child: Option(selected: 2, options: ['1', '2', '3']),
+            ),
           ],
         ),
       ),
