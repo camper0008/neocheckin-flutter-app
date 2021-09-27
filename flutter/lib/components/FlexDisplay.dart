@@ -17,6 +17,7 @@ class _FlexDisplayState extends State<FlexDisplay> {
   late String _flexPrefix;
   late Color _flexColor;
   late String _stateText;
+  late FocusNode _focusNode;
 
   _updateSelfState(Time flex, [ bool checkedIn = true ]) {
     _flexHours = flex.getFormattedHours();
@@ -30,6 +31,8 @@ class _FlexDisplayState extends State<FlexDisplay> {
       _stateText = "Du er nu checket ind";
     else
       _stateText = "Du er nu checket ud";
+
+    _focusNode = FocusNode(skipTraversal: true, canRequestFocus: true, descendantsAreFocusable: true);
   }
 
   @override
@@ -41,6 +44,13 @@ class _FlexDisplayState extends State<FlexDisplay> {
   void didUpdateWidget(FlexDisplay oldWidget) {
     super.didUpdateWidget(oldWidget);
     _updateSelfState(widget.flex);
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+
+    super.dispose();
   }
 
   @override
@@ -100,6 +110,16 @@ class _FlexDisplayState extends State<FlexDisplay> {
                   color: Colors.green
                 ),
               )
+            ),
+            Container(
+              width: 0,
+              child: TextField(
+                autofocus: true,
+                onSubmitted: (String value) {
+                  _focusNode.requestFocus();
+                },
+                focusNode: _focusNode,
+              ),
             ),
           ],
         ),
