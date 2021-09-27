@@ -35,7 +35,6 @@ class _OptionState extends State<Option> {
 
   @override
   Widget build(BuildContext context) {
-  print(_selected);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: _options.asMap().entries.map((entry) => 
