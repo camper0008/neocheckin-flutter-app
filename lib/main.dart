@@ -33,11 +33,21 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _optionSelected = 0;
+  String _name = '';
+  bool _checkedIn = false;
   Time _flex = new Time();
 
   void _setOption(int option) {
     setState(() {
       _optionSelected = option;
+    });
+  }
+  void _setName(String name) {
+    setState(() {
+    });
+  }
+  void _setCheckOutState(int option) {
+    setState(() {
     });
   }
 
@@ -48,7 +58,7 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            FlexDisplay(flex: _flex),
+            FlexDisplay(flex: _flex, name: _name, checkedIn: _checkedIn),
             Padding(
               padding: EdgeInsets.only(top: 36), 
               child: Option(

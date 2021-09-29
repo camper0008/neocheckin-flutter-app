@@ -4,8 +4,10 @@ import '../utils/Time.dart';
 
 class FlexDisplay extends StatefulWidget {
   final Time flex;
+  final bool checkedIn;
+  final String name;
 
-  FlexDisplay({required this.flex});
+  FlexDisplay({required this.flex, required this.name, required this.checkedIn});
 
   @override
   State<FlexDisplay> createState() => _FlexDisplayState();
@@ -16,16 +18,19 @@ class _FlexDisplayState extends State<FlexDisplay> {
   late String _flexMinutes;
   late String _flexPrefix;
   late Color _flexColor;
+  late String _name;
   late String _stateText;
   late FocusNode _focusNode;
 
-  _updateSelfState(Time flex, [ bool checkedIn = true ]) {
+  _updateSelfState(Time flex, String name, bool checkedIn) {
     _flexHours = flex.getFormattedHours();
     _flexMinutes = flex.getFormattedMinutes();
 
     bool isNegative = flex.isNegative();
     _flexPrefix = isNegative ? '-' : '+';
     _flexColor = isNegative ? Colors.red : Colors.green;
+
+    _name = name;
 
     if (checkedIn)
       _stateText = "Du er nu checket ind";
@@ -38,12 +43,12 @@ class _FlexDisplayState extends State<FlexDisplay> {
   @override
   void initState() {
     super.initState();
-    _updateSelfState(widget.flex);
+    _updateSelfState(widget.flex, widget.name, widget.checkedIn);
   }
   @override
   void didUpdateWidget(FlexDisplay oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _updateSelfState(widget.flex);
+    _updateSelfState(widget.flex, widget.name, widget.checkedIn);
   }
 
   @override
@@ -69,7 +74,7 @@ class _FlexDisplayState extends State<FlexDisplay> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Mikkel Troels Conststed',
+              _name,
               style: TextStyle(
                 fontSize: (14*2),
               ),
