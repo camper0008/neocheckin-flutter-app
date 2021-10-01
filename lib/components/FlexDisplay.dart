@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
-import '../utils/Time.dart';
+import '/utils/Time.dart';
 
 class FlexDisplay extends StatefulWidget {
   final Time flex;
