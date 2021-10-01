@@ -35,14 +35,15 @@ class _OptionState extends State<Option> {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: _options.asMap().entries.map((entry) => 
+      children: _options.asMap().entries.map((entry) =>
         Container(margin: EdgeInsets.symmetric(horizontal: 10),
-          child: (entry.key == _selected)
-          ? ElevatedButton(
+          child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              shadowColor: Colors.transparent,
+              elevation: (entry.key == _selected) ? 8 : 2,
+              primary: (entry.key == _selected) ? theme.primaryColor : theme.primaryColorDark,
             ),
             onPressed: () {_updateParentState(entry.key);},
             child: Padding(
@@ -55,18 +56,6 @@ class _OptionState extends State<Option> {
               ),
             ),
           )
-          : OutlinedButton(
-            onPressed: () {_updateParentState(entry.key);},
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Text(
-                entry.value,
-                style: TextStyle(
-                  fontSize: 24,
-                )
-              ),
-            )
-          ),
         ),
       ).toList()
     );
