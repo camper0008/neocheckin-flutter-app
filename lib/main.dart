@@ -34,7 +34,8 @@ class _HomePageState extends State<HomePage> {
   String _name = 'User';
   bool _checkedIn = false;
   Time _flex = new Time();
-  FocusNode _focusNode = FocusNode(skipTraversal: true, canRequestFocus: true, descendantsAreFocusable: true);
+  FocusNode _cardFieldFocusNode = FocusNode(skipTraversal: true, canRequestFocus: true, descendantsAreFocusable: true);
+  TextEditingController _cardFieldController = TextEditingController();
 
   void _setOption(int option) {
     setState(() {
@@ -43,16 +44,19 @@ class _HomePageState extends State<HomePage> {
   }
   void _setName(String name) {
     setState(() {
+      _name = name;
     });
   }
-  void _setCheckOutState(int option) {
+  void _setCheckOutState(bool option) {
     setState(() {
+      _checkedIn = option;
     });
   }
 
     @override
   void dispose() {
-    _focusNode.dispose();
+    _cardFieldFocusNode.dispose();
+    _cardFieldController.dispose();
 
     super.dispose();
   }
@@ -78,9 +82,11 @@ class _HomePageState extends State<HomePage> {
               child: TextField(
                 autofocus: true,
                 onSubmitted: (String value) {
-                  _focusNode.requestFocus();
+                  _cardFieldController.clear();
+                  _cardFieldFocusNode.requestFocus();
                 },
-                focusNode: _focusNode,
+                focusNode: _cardFieldFocusNode,
+                controller: _cardFieldController,
               ),
             ),
           ],
