@@ -31,7 +31,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _optionSelected = 0;
+  int _optionSelected = -1;
   String _name = 'User';
   bool _checkedIn = false;
   Time _flex = new Time();
@@ -87,9 +87,8 @@ class _HomePageState extends State<HomePage> {
                 Option(
                   selected: _optionSelected, 
                   options: [
-                    'zero', 
-                    'one', 
-                    'two',
+                    'Gåtur', 
+                    'Aftale',
                   ], 
                   stateFunction: _setOption
                 ),
@@ -98,6 +97,7 @@ class _HomePageState extends State<HomePage> {
                   child: TextField(
                     autofocus: true,
                     onSubmitted: (String value) {
+                      _setOption(-1);
                       _cardFieldController.clear();
                       _cardFieldFocusNode.requestFocus();
                     },
