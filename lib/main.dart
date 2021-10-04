@@ -91,31 +91,31 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 36),
-                  child: Text(
-                    (_checkedIn ? 'Du er nu checket ind' : 'Du er nu checket ud'),
-                    style: const TextStyle(
-                      fontSize: (14*3),
-                    ),
-                  )
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 36), 
-                  child: FlexDisplay(flex: _flex, name: _name),
-                ),
-                Option(
-                  selected: _optionSelected, 
-                  options: const [
-                    'Gåtur', 
-                    'Aftale',
-                  ], 
-                  stateFunction: _setOption
-                ),
-              ],
-            ),
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(bottom: 36),
+                child: Text(
+                  (_checkedIn ? 'Du er nu checket ind' : 'Du er nu checket ud'),
+                  style: const TextStyle(
+                    fontSize: (14*3),
+                  ),
+                )
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 36), 
+                child: FlexDisplay(flex: _flex, name: _name),
+              ),
+              Option(
+                selected: _optionSelected, 
+                options: const [
+                  'Gåtur', 
+                  'Aftale',
+                ], 
+                stateFunction: _setOption
+              ),
+            ],
+          ),
         ],
       ),
     );
