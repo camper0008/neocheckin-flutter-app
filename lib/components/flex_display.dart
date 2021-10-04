@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
-import '/utils/Time.dart';
+import '../utils/time.dart';
 
 class FlexDisplay extends StatefulWidget {
   final Time flex;
-  final bool checkedIn;
   final String name;
 
-  FlexDisplay({required this.flex, required this.name, required this.checkedIn});
+  const FlexDisplay({Key? key, required this.flex, required this.name}) : super(key: key);
 
   @override
   State<FlexDisplay> createState() => _FlexDisplayState();
@@ -19,10 +18,8 @@ class _FlexDisplayState extends State<FlexDisplay> {
   late String _flexPrefix;
   late Color _flexColor;
   late String _name;
-  late String _stateText;
-  late FocusNode _focusNode;
 
-  _updateSelfState(Time flex, String name, bool checkedIn) {
+  _updateSelfState(Time flex, String name) {
     _flexHours = flex.getFormattedHours();
     _flexMinutes = flex.getFormattedMinutes();
 
@@ -31,32 +28,20 @@ class _FlexDisplayState extends State<FlexDisplay> {
     _flexColor = isNegative ? Colors.red : Colors.green;
 
     _name = name;
-
-    if (checkedIn)
-      _stateText = "Du er nu checket ind";
-    else
-      _stateText = "Du er nu checket ud";
-
-    _focusNode = FocusNode(skipTraversal: true, canRequestFocus: true, descendantsAreFocusable: true);
   }
 
   @override
   void initState() {
     super.initState();
-    _updateSelfState(widget.flex, widget.name, widget.checkedIn);
+    _updateSelfState(widget.flex, widget.name);
   }
   @override
   void didUpdateWidget(FlexDisplay oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _updateSelfState(widget.flex, widget.name, widget.checkedIn);
+    _updateSelfState(widget.flex, widget.name);
   }
 
-  @override
-  void dispose() {
-    _focusNode.dispose();
 
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext build) {
@@ -64,7 +49,7 @@ class _FlexDisplayState extends State<FlexDisplay> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
+        const Padding(
           padding: EdgeInsets.only(right: 40), 
           child: Image(
             image: AssetImage('assets/images/placeholder.png')
@@ -75,15 +60,15 @@ class _FlexDisplayState extends State<FlexDisplay> {
           children: [
             Text(
               _name,
-              style: TextStyle(
-                fontSize: (14*2),
+              style: const TextStyle(
+                fontSize: (14*2.75),
               ),
             ),
             RichText(
               text: TextSpan(
-                style: TextStyle(fontSize: (14*2)),
+                style: const TextStyle(fontSize: (14*2.25)),
                 children: <TextSpan>[
-                  TextSpan(
+                  const TextSpan(
                     text: 'Flex: '
                   ),
                   TextSpan(
@@ -93,37 +78,17 @@ class _FlexDisplayState extends State<FlexDisplay> {
                       fontFamily: 'RobotoMono',
                     ),
                   ),
-                  TextSpan(
+                  const TextSpan(
                     text: ':',
                   ),
                   TextSpan(
-                    text: '$_flexMinutes', 
+                    text: _flexMinutes, 
                     style: TextStyle(
                       color: _flexColor,
                       fontFamily: 'RobotoMono',
                     ),
                   ),
                 ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 36),
-              child: Text(
-                '$_stateText',
-                style: TextStyle(
-                  fontSize: (14*2.5),
-                  color: Colors.green
-                ),
-              )
-            ),
-            Container(
-              width: 0,
-              child: TextField(
-                autofocus: true,
-                onSubmitted: (String value) {
-                  _focusNode.requestFocus();
-                },
-                focusNode: _focusNode,
               ),
             ),
           ],

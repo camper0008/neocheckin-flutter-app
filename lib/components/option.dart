@@ -5,7 +5,7 @@ class Option extends StatefulWidget {
   final List<String> options;
   final Function(int) stateFunction;
 
-  Option({required this.selected, required this.options, required this.stateFunction});
+  const Option({Key? key, required this.selected, required this.options, required this.stateFunction}) : super(key: key);
 
   @override
   State<Option> createState() => _OptionState();
@@ -35,23 +35,23 @@ class _OptionState extends State<Option> {
 
   @override
   Widget build(BuildContext context) {
-    ThemeData theme = Theme.of(context);
+    ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: _options.asMap().entries.map((entry) =>
-        Container(margin: EdgeInsets.symmetric(horizontal: 10),
+        Container(margin: const EdgeInsets.symmetric(horizontal: 16),
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              elevation: (entry.key == _selected) ? 8 : 2,
-              primary: (entry.key == _selected) ? theme.primaryColor : theme.primaryColorDark,
+              elevation: (entry.key == _selected) ? 8 : 0,
+              primary: (entry.key == _selected) ? colorScheme.primary : colorScheme.primaryVariant,
             ),
             onPressed: () {_updateParentState(entry.key);},
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
               child: Text(
                 entry.value,
-                style: TextStyle(
-                  fontSize: 24,
+                style: const TextStyle(
+                  fontSize: 32,
                 )
               ),
             ),
