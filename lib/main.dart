@@ -67,6 +67,19 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: Stack(
         children: [
+          Container(
+            width: 0,
+            child: TextField(
+              autofocus: true,
+              onSubmitted: (String value) {
+                _setOption(-1);
+                _cardFieldController.clear();
+                _cardFieldFocusNode.requestFocus();
+              },
+              focusNode: _cardFieldFocusNode,
+              controller: _cardFieldController,
+            ),
+          ),
           Align(
             alignment: Alignment.centerRight,
             child: Padding(
@@ -91,19 +104,6 @@ class _HomePageState extends State<HomePage> {
                     'Aftale',
                   ], 
                   stateFunction: _setOption
-                ),
-                Container(
-                  width: 0,
-                  child: TextField(
-                    autofocus: true,
-                    onSubmitted: (String value) {
-                      _setOption(-1);
-                      _cardFieldController.clear();
-                      _cardFieldFocusNode.requestFocus();
-                    },
-                    focusNode: _cardFieldFocusNode,
-                    controller: _cardFieldController,
-                  ),
                 ),
               ],
             ),
