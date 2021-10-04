@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:neocheckin/components/Option.dart';
+import 'package:neocheckin/components/WorkerDisplay.dart';
 import '/components/FlexDisplay.dart';
 import '/utils/Time.dart';
 
@@ -64,33 +65,49 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(bottom: 36), 
-              child: FlexDisplay(flex: _flex, name: _name, checkedIn: _checkedIn),
+      body: Stack(
+        children: [
+          Align(
+            alignment: Alignment.centerRight,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 64.0),
+              child: WorkerDisplay(workers: {
+                'department': List.filled(4, 'camper'),
+                'department2': List.filled(4, 'camper'),
+              }),
             ),
-            Option(
-              selected: _optionSelected, 
-              options: ['zero', 'one', 'two'], 
-              stateFunction: _setOption
+          ),
+          Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(bottom: 36), 
+                  child: FlexDisplay(flex: _flex, name: _name, checkedIn: _checkedIn),
+                ),
+                Option(
+                  selected: _optionSelected, 
+                  options: [
+                    'zero', 
+                    'one', 
+                    'two',
+                  ], 
+                  stateFunction: _setOption
+                ),
+                Container(
+                  width: 0,
+                  child: TextField(
+                    autofocus: true,
+                    onSubmitted: (String value) {
+                      _cardFieldController.clear();
+                      _cardFieldFocusNode.requestFocus();
+                    },
+                    focusNode: _cardFieldFocusNode,
+                    controller: _cardFieldController,
+                  ),
+                ),
+              ],
             ),
-            Container(
-              width: 0,
-              child: TextField(
-                autofocus: true,
-                onSubmitted: (String value) {
-                  _cardFieldController.clear();
-                  _cardFieldFocusNode.requestFocus();
-                },
-                focusNode: _cardFieldFocusNode,
-                controller: _cardFieldController,
-              ),
-            ),
-          ],
-        ),
+        ],
       ),
     );
   }
