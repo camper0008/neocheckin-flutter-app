@@ -35,15 +35,15 @@ class _OptionState extends State<Option> {
 
   @override
   Widget build(BuildContext context) {
-    ThemeData theme = Theme.of(context);
+    ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: _options.asMap().entries.map((entry) =>
         Container(margin: EdgeInsets.symmetric(horizontal: 16),
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              elevation: (entry.key == _selected) ? 8 : 2,
-              primary: (entry.key == _selected) ? theme.primaryColor : theme.primaryColorDark,
+              elevation: (entry.key == _selected) ? 8 : 0,
+              primary: (entry.key == _selected) ? colorScheme.primary : colorScheme.primaryVariant,
             ),
             onPressed: () {_updateParentState(entry.key);},
             child: Padding(
