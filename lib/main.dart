@@ -34,6 +34,7 @@ class _HomePageState extends State<HomePage> {
   String _name = 'User';
   bool _checkedIn = false;
   Time _flex = new Time();
+  FocusNode _focusNode = FocusNode(skipTraversal: true, canRequestFocus: true, descendantsAreFocusable: true);
 
   void _setOption(int option) {
     setState(() {
@@ -49,6 +50,13 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+    @override
+  void dispose() {
+    _focusNode.dispose();
+
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,11 +68,21 @@ class _HomePageState extends State<HomePage> {
               padding: EdgeInsets.only(bottom: 36), 
               child: FlexDisplay(flex: _flex, name: _name, checkedIn: _checkedIn),
             ),
-              Option(
-                selected: _optionSelected, 
-                options: ['zero', 'one', 'two'], 
-                stateFunction: _setOption
+            Option(
+              selected: _optionSelected, 
+              options: ['zero', 'one', 'two'], 
+              stateFunction: _setOption
+            ),
+            Container(
+              width: 0,
+              child: TextField(
+                autofocus: true,
+                onSubmitted: (String value) {
+                  _focusNode.requestFocus();
+                },
+                focusNode: _focusNode,
               ),
+            ),
           ],
         ),
       ),
