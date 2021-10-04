@@ -94,8 +94,17 @@ class _HomePageState extends State<HomePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Padding(
+                  padding: const EdgeInsets.only(bottom: 36),
+                  child: Text(
+                    (_checkedIn ? 'Du er nu checket ind' : 'Du er nu checket ud'),
+                    style: TextStyle(
+                      fontSize: (14*3),
+                    ),
+                  )
+                ),
+                Padding(
                   padding: EdgeInsets.only(bottom: 36), 
-                  child: FlexDisplay(flex: _flex, name: _name, checkedIn: _checkedIn),
+                  child: FlexDisplay(flex: _flex, name: _name),
                 ),
                 Option(
                   selected: _optionSelected, 

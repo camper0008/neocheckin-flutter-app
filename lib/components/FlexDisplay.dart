@@ -4,10 +4,9 @@ import '/utils/Time.dart';
 
 class FlexDisplay extends StatefulWidget {
   final Time flex;
-  final bool checkedIn;
   final String name;
 
-  FlexDisplay({required this.flex, required this.name, required this.checkedIn});
+  FlexDisplay({required this.flex, required this.name});
 
   @override
   State<FlexDisplay> createState() => _FlexDisplayState();
@@ -19,9 +18,8 @@ class _FlexDisplayState extends State<FlexDisplay> {
   late String _flexPrefix;
   late Color _flexColor;
   late String _name;
-  late String _stateText;
 
-  _updateSelfState(Time flex, String name, bool checkedIn) {
+  _updateSelfState(Time flex, String name) {
     _flexHours = flex.getFormattedHours();
     _flexMinutes = flex.getFormattedMinutes();
 
@@ -30,22 +28,17 @@ class _FlexDisplayState extends State<FlexDisplay> {
     _flexColor = isNegative ? Colors.red : Colors.green;
 
     _name = name;
-
-    if (checkedIn)
-      _stateText = "Du er nu checket ind";
-    else
-      _stateText = "Du er nu checket ud";
   }
 
   @override
   void initState() {
     super.initState();
-    _updateSelfState(widget.flex, widget.name, widget.checkedIn);
+    _updateSelfState(widget.flex, widget.name);
   }
   @override
   void didUpdateWidget(FlexDisplay oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _updateSelfState(widget.flex, widget.name, widget.checkedIn);
+    _updateSelfState(widget.flex, widget.name);
   }
 
 
@@ -68,12 +61,12 @@ class _FlexDisplayState extends State<FlexDisplay> {
             Text(
               _name,
               style: TextStyle(
-                fontSize: (14*2),
+                fontSize: (14*2.75),
               ),
             ),
             RichText(
               text: TextSpan(
-                style: TextStyle(fontSize: (14*2)),
+                style: TextStyle(fontSize: (14*2.25)),
                 children: <TextSpan>[
                   TextSpan(
                     text: 'Flex: '
@@ -97,16 +90,6 @@ class _FlexDisplayState extends State<FlexDisplay> {
                   ),
                 ],
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 36),
-              child: Text(
-                '$_stateText',
-                style: TextStyle(
-                  fontSize: (14*2.5),
-                  color: Colors.green
-                ),
-              )
             ),
           ],
         ),
