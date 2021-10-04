@@ -54,7 +54,17 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-    @override
+  @override
+  void initState() {
+    _cardFieldFocusNode.addListener(() {
+      if (!_cardFieldFocusNode.hasFocus) {
+        _cardFieldFocusNode.requestFocus();
+      }
+    });
+    super.initState();
+  }
+
+  @override
   void dispose() {
     _cardFieldFocusNode.dispose();
     _cardFieldController.dispose();
