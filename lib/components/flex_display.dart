@@ -6,7 +6,7 @@ class FlexDisplay extends StatefulWidget {
   final Time flex;
   final String name;
 
-  const FlexDisplay({required this.flex, required this.name});
+  const FlexDisplay({Key? key, required this.flex, required this.name}) : super(key: key);
 
   @override
   State<FlexDisplay> createState() => _FlexDisplayState();

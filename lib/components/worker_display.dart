@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class WorkerDisplay extends StatefulWidget {
   final Map<String, List<String>> workers;
 
-  const WorkerDisplay({ required this.workers });
+  const WorkerDisplay({Key? key, required this.workers}) : super(key: key);
 
   @override
   State<WorkerDisplay> createState() => _WorkerDisplayState();

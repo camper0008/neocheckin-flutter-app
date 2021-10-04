@@ -5,7 +5,7 @@ class Option extends StatefulWidget {
   final List<String> options;
   final Function(int) stateFunction;
 
-  Option({required this.selected, required this.options, required this.stateFunction});
+  const Option({Key? key, required this.selected, required this.options, required this.stateFunction}) : super(key: key);
 
   @override
   State<Option> createState() => _OptionState();
