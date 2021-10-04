@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class WorkerDisplay extends StatefulWidget {
   final Map<String, List<String>> workers;
 
-  WorkerDisplay({ required this.workers });
+  const WorkerDisplay({ required this.workers });
 
   @override
   State<WorkerDisplay> createState() => _WorkerDisplayState();
@@ -36,18 +36,18 @@ class _WorkerDisplayState extends State<WorkerDisplay> {
         Column(
           children: [
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 8),
+              padding: const EdgeInsets.symmetric(vertical: 8),
               child: Text(
                 department.key,
-                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
               ),
             ),
             ...department.value.asMap().entries.map((entry) => 
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 4),
+                padding: const EdgeInsets.symmetric(vertical: 4),
                 child: Text(
                   entry.value,
-                  style: TextStyle(fontSize: 28),
+                  style: const TextStyle(fontSize: 28),
                 ),
               ),
             ).toList()

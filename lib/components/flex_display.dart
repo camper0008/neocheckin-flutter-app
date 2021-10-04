@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
-import '/utils/Time.dart';
+import '../utils/time.dart';
 
 class FlexDisplay extends StatefulWidget {
   final Time flex;
   final String name;
 
-  FlexDisplay({required this.flex, required this.name});
+  const FlexDisplay({required this.flex, required this.name});
 
   @override
   State<FlexDisplay> createState() => _FlexDisplayState();
@@ -49,7 +49,7 @@ class _FlexDisplayState extends State<FlexDisplay> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
+        const Padding(
           padding: EdgeInsets.only(right: 40), 
           child: Image(
             image: AssetImage('assets/images/placeholder.png')
@@ -60,15 +60,15 @@ class _FlexDisplayState extends State<FlexDisplay> {
           children: [
             Text(
               _name,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: (14*2.75),
               ),
             ),
             RichText(
               text: TextSpan(
-                style: TextStyle(fontSize: (14*2.25)),
+                style: const TextStyle(fontSize: (14*2.25)),
                 children: <TextSpan>[
-                  TextSpan(
+                  const TextSpan(
                     text: 'Flex: '
                   ),
                   TextSpan(
@@ -78,11 +78,11 @@ class _FlexDisplayState extends State<FlexDisplay> {
                       fontFamily: 'RobotoMono',
                     ),
                   ),
-                  TextSpan(
+                  const TextSpan(
                     text: ':',
                   ),
                   TextSpan(
-                    text: '$_flexMinutes', 
+                    text: _flexMinutes, 
                     style: TextStyle(
                       color: _flexColor,
                       fontFamily: 'RobotoMono',

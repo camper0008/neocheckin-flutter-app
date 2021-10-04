@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:neocheckin/components/Option.dart';
-import 'package:neocheckin/components/WorkerDisplay.dart';
-import '/components/FlexDisplay.dart';
-import '/utils/Time.dart';
+import 'package:neocheckin/components/option.dart';
+import 'package:neocheckin/components/worker_display.dart';
+import 'components/flex_display.dart';
+import 'utils/time.dart';
 
 void main() {
   runApp(const App());
@@ -34,9 +34,9 @@ class _HomePageState extends State<HomePage> {
   int _optionSelected = -1;
   String _name = 'User';
   bool _checkedIn = false;
-  Time _flex = new Time();
-  FocusNode _cardFieldFocusNode = FocusNode(skipTraversal: true, canRequestFocus: true, descendantsAreFocusable: true);
-  TextEditingController _cardFieldController = TextEditingController();
+  final Time _flex = Time();
+  final FocusNode _cardFieldFocusNode = FocusNode(skipTraversal: true, canRequestFocus: true, descendantsAreFocusable: true);
+  final TextEditingController _cardFieldController = TextEditingController();
 
   void _setOption(int option) {
     setState(() {
@@ -67,7 +67,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: Stack(
         children: [
-          Container(
+          SizedBox(
             width: 0,
             child: TextField(
               autofocus: true,
@@ -97,18 +97,18 @@ class _HomePageState extends State<HomePage> {
                   padding: const EdgeInsets.only(bottom: 36),
                   child: Text(
                     (_checkedIn ? 'Du er nu checket ind' : 'Du er nu checket ud'),
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: (14*3),
                     ),
                   )
                 ),
                 Padding(
-                  padding: EdgeInsets.only(bottom: 36), 
+                  padding: const EdgeInsets.only(bottom: 36), 
                   child: FlexDisplay(flex: _flex, name: _name),
                 ),
                 Option(
                   selected: _optionSelected, 
-                  options: [
+                  options: const [
                     'Gåtur', 
                     'Aftale',
                   ], 
