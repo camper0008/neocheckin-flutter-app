@@ -39,7 +39,7 @@ class _OptionState extends State<Option> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: _options.asMap().entries.map((entry) =>
-        Container(margin: EdgeInsets.symmetric(horizontal: 10),
+        Container(margin: EdgeInsets.symmetric(horizontal: 16),
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
               elevation: (entry.key == _selected) ? 8 : 2,
@@ -47,11 +47,11 @@ class _OptionState extends State<Option> {
             ),
             onPressed: () {_updateParentState(entry.key);},
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
               child: Text(
                 entry.value,
                 style: TextStyle(
-                  fontSize: 24,
+                  fontSize: 32,
                 )
               ),
             ),
