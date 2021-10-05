@@ -67,7 +67,7 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children:
                   [
-                    CancelScanButton(action: 'Gåtur', callback: (){_setName('yea');})
+                    CancelButton(action: 'Gåtur', callback: (){_setName('yea');})
                   ],
               ),
             ),

@@ -11,17 +11,17 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 
-class CancelScanButton extends StatefulWidget {
+class CancelButton extends StatefulWidget {
   final String action;
   final void Function() callback;
 
-  const CancelScanButton({Key? key, required this.action, required this.callback}) : super(key: key);
+  const CancelButton({Key? key, required this.action, required this.callback}) : super(key: key);
 
   @override
-  State<CancelScanButton> createState() => _CancelScanButtonState();
+  State<CancelButton> createState() => _CancelButtonState();
 }
 
-class _CancelScanButtonState extends State<CancelScanButton> {
+class _CancelButtonState extends State<CancelButton> {
   late Timer _callbackTimer;
   late String _action;
   late Timer _displayTimer;
