@@ -41,8 +41,6 @@ class _FlexDisplayState extends State<FlexDisplay> {
     _updateSelfState(widget.flex, widget.name);
   }
 
-
-
   @override
   Widget build(BuildContext build) {
     return Row(
