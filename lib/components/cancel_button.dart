@@ -97,7 +97,7 @@ class _CancelButtonState extends State<CancelButton> {
       label: Padding(
         padding: const EdgeInsets.symmetric(vertical: 16),
         child: Text(
-          'Cancel ' + _controller.action + '? [' + _controller.getDisplayString() + ']',
+          'Annuller ' + _controller.action + '? [' + _controller.getDisplayString() + ']',
           style: const TextStyle(fontSize: 24),
         ),
       ),

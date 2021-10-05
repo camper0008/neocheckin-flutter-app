@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:neocheckin/components/cancel_button.dart';
 import 'package:neocheckin/components/cancel_button_list.dart';
@@ -41,6 +43,8 @@ class _HomePageState extends State<HomePage> {
   String _name = 'User';
   bool _checkedIn = false;
   Map<String, List<String>> _workers = {};
+  //Timer flexDisplayShowTimer = Timer(duration, callback);
+  //bool shouldShowFlexDisplay = false;
 
   void _setOption(int option) {
     setState(() {
@@ -48,6 +52,11 @@ class _HomePageState extends State<HomePage> {
     });
   }
   void _setName(String name) {
+    setState(() {
+      _name = name;
+    });
+  }
+  void _toggleFlexVisibility(String name) {
     setState(() {
       _name = name;
     });
@@ -148,7 +157,10 @@ class _HomePageState extends State<HomePage> {
                 _setOption(-1);
                 _addCancelButton(
                   CancelButtonController(
-                    action: 'check ' + (body['user']['checkedIn'] == true ? 'ud' : 'ind'), 
+                    action: 'check ' 
+                    + (body['user']['checkedIn'] == true ? 'ud' : 'ind') 
+                    + ' for ' 
+                    + body['user']['name'].toString(), 
                     callback: () async {
                       Map<String, dynamic> httpReq = {
                         "userid": value,
