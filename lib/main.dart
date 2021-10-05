@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:neocheckin/components/cancel_button.dart';
+import 'package:neocheckin/components/cancel_button_list.dart';
+import 'package:neocheckin/components/card_reader_input.dart';
 import 'package:neocheckin/components/option.dart';
 import 'package:neocheckin/components/worker_display.dart';
 import 'components/flex_display.dart';
@@ -31,12 +34,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final List<CancelButtonController> _cancelButtons = [];
+  final Time _flex = Time();
   int _optionSelected = -1;
   String _name = 'User';
   bool _checkedIn = false;
-  final Time _flex = Time();
-  final FocusNode _cardFieldFocusNode = FocusNode(skipTraversal: true, canRequestFocus: true, descendantsAreFocusable: true);
-  final TextEditingController _cardFieldController = TextEditingController();
+
 
   void _setOption(int option) {
     setState(() {
@@ -53,13 +56,15 @@ class _HomePageState extends State<HomePage> {
       _checkedIn = option;
     });
   }
-
-    @override
-  void dispose() {
-    _cardFieldFocusNode.dispose();
-    _cardFieldController.dispose();
-
-    super.dispose();
+  void _addCancelButton(CancelButtonController cancelButton) {
+    setState(() {
+      _cancelButtons.add(cancelButton);
+    });
+  }
+  void _removeCancelButton(CancelButtonController cancelButton) {
+    setState(() {
+      _cancelButtons.removeWhere((p) => p == cancelButton);
+    });
   }
 
   @override
@@ -67,18 +72,9 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: Stack(
         children: [
-          SizedBox(
-            width: 0,
-            child: TextField(
-              autofocus: true,
-              onSubmitted: (String value) {
-                _setOption(-1);
-                _cardFieldController.clear();
-                _cardFieldFocusNode.requestFocus();
-              },
-              focusNode: _cardFieldFocusNode,
-              controller: _cardFieldController,
-            ),
+          CancelButtonList(
+            cancelButtons: _cancelButtons,
+            removeCancelButton: _removeCancelButton,
           ),
           Align(
             alignment: Alignment.centerRight,
@@ -91,31 +87,44 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 36),
-                  child: Text(
-                    (_checkedIn ? 'Du er nu checket ind' : 'Du er nu checket ud'),
-                    style: const TextStyle(
-                      fontSize: (14*3),
-                    ),
-                  )
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 36), 
-                  child: FlexDisplay(flex: _flex, name: _name),
-                ),
-                Option(
-                  selected: _optionSelected, 
-                  options: const [
-                    'Gåtur', 
-                    'Aftale',
-                  ], 
-                  stateFunction: _setOption
-                ),
-              ],
-            ),
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(bottom: 36),
+                child: Text(
+                  (_checkedIn ? 'Du er nu checket ind' : 'Du er nu checket ud'),
+                  style: const TextStyle(
+                    fontSize: (14*3),
+                  ),
+                )
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 36), 
+                child: FlexDisplay(flex: _flex, name: _name),
+              ),
+              Option(
+                selected: _optionSelected, 
+                options: const [
+                  'Gåtur', 
+                  'Aftale',
+                ], 
+                stateFunction: _setOption
+              ),
+            ],
+          ),
+          CardReaderInput(
+            onSubmitted: (String value) {
+              _setOption(-1);
+              _addCancelButton(
+                CancelButtonController(
+                  action: 'Check in with id $value', 
+                  callback: (){_setName('Sent request with $value');},
+                  duration: 5,
+                  unmountCallback: _removeCancelButton,
+                )
+              );
+            },
+          ),
         ],
       ),
     );
