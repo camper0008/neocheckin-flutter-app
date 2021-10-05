@@ -1,76 +1,113 @@
-/*
-  SHOULD BE:
-    elevatedbutton, red
-  USES:
-    Timer class from dart:async
-    https://api.flutter.dev/flutter/dart-async/Timer-class.html
-  HAS:
-    Line from start to finish counting down
-*/
-
 import 'dart:async';
 import 'package:flutter/material.dart';
 
-class CancelButton extends StatefulWidget {
+class CancelButtonController {
+  final int duration;
   final String action;
   final void Function() callback;
+  final void Function(CancelButtonController) unmountCallback;
+  late final Timer _callbackTimer;
+  late int _displayCounter;
 
-  const CancelButton({Key? key, required this.action, required this.callback}) : super(key: key);
+  CancelButtonController({required this.duration, required this.action, required this.callback, required this.unmountCallback}) {
+    _callbackTimer = Timer(
+      Duration(seconds: duration, milliseconds: 25),
+      () { 
+        callback();
+        unmountCallback(this);
+      }
+    );
+
+    _displayCounter = duration * 10;
+  }
+
+  void decreaseCounter() {
+    _displayCounter--;
+  }
+
+  String getDisplayString() {
+    return _displayCounter.toString()
+      .padLeft(2, '0').split('')
+      .reduce((prev, curr) => prev + '.' + curr);
+  }
+}
+
+class CancelButton extends StatefulWidget {
+  final CancelButtonController controller;
+
+  const CancelButton({Key? key, required this.controller}) : super(key: key);
 
   @override
   State<CancelButton> createState() => _CancelButtonState();
 }
 
 class _CancelButtonState extends State<CancelButton> {
-  late Timer _callbackTimer;
-  late String _action;
-  late Timer _displayTimer;
-  String _timerString = "";
+  late CancelButtonController _controller;
+  Timer _displayTimer = Timer(const Duration(seconds: 0), (){});
+
+  void update(CancelButton widget) {
+    _controller = widget.controller;
+  }
+
+  void _createDisplayTimer(CancelButton widget) {
+    _displayTimer = Timer.periodic(
+      const Duration(milliseconds: 100), 
+      (timer) {
+        if (!mounted) { timer.cancel(); return;}
+        if (_controller._displayCounter < 1) {
+          timer.cancel();
+        } else {
+          setState(() {
+            _controller.decreaseCounter();
+          });
+        }
+      }
+    );
+  }
 
   @override
   void initState() {
-    _callbackTimer = Timer(const Duration(seconds: 6), widget.callback);
-    _action = widget.action;
-    _startCountdown();
     super.initState();
+    update(widget);
+    _createDisplayTimer(widget);
   }
 
-  _startCountdown() {
-    int _countdown = 5000;
-    _displayTimer = Timer.periodic(const Duration(milliseconds: 100), (countdownTimer) {
-      if (_countdown < 100) {
-        countdownTimer.cancel();
-      } else {
-        _countdown -= 100;
-        String paddedString = _countdown.toString().padLeft(4, '0');
-        String seconds = paddedString.substring(0, 1);
-        String milliseconds = paddedString.substring(1, 2);
-        setState(() {
-          _timerString = '$seconds.$milliseconds';
-        });
-      }
-    });
+  @override
+  void didUpdateWidget(CancelButton oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    update(widget);
+    _displayTimer.cancel();
+    _createDisplayTimer(widget);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _displayTimer.cancel();
   }
 
   @override
   Widget build(BuildContext build) {
-      return ElevatedButton.icon(
-        onPressed: () {
-          _callbackTimer.cancel();
-          _displayTimer.cancel();
-        }, 
-        label: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          child: Text(
-            '[$_timerString] Cancel $_action',
-            style: const TextStyle(fontSize: 24),
-          ),
+    return ElevatedButton.icon(
+      onPressed: () {
+        _displayTimer.cancel();
+        _controller._callbackTimer.cancel();
+        _controller.unmountCallback(_controller);
+      }, 
+      label: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        child: Text(
+          'Cancel ' + _controller.action + '? [' + _controller.getDisplayString() + ']',
+          style: const TextStyle(fontSize: 24),
         ),
-        icon: const Icon(
-          Icons.alarm,
-          size: 24,
-        ),
-        style: ElevatedButton.styleFrom(primary: Colors.red),
-      );
+      ),
+      icon: const Icon(
+        Icons.alarm,
+        size: 24,
+      ),
+      style: ElevatedButton.styleFrom(
+        primary: Colors.red,
+      ),
+    );
   }
 }
