@@ -1,24 +1,42 @@
 import express from "express";
 import cors from "cors";
+import { stringify } from "querystring";
 
 interface DbInterface {
-    [key: string]: {
-        username: string,
-        flex: number,
-        checkedIn: boolean,
-    }
+    [key: string]: Worker;
+}
+
+interface Worker {
+    name: string,
+    flex: number,
+    checkedIn: boolean,
+    department: string;
 }
 
 const db: DbInterface = {
     "user": {
-        username: 'testuser',
+        name: 'testuser',
         flex: 50000,
         checkedIn: false,
+        department: 'department1',
     },
     "user2": {
-        username: 'testuser2',
+        name: 'testuser2',
         flex: 420,
         checkedIn: true,
+        department: 'department1',
+    },
+    "user3": {
+        name: 'testuser3',
+        flex: 420,
+        checkedIn: true,
+        department: 'department2',
+    },
+    "user4": {
+        name: 'testuser4',
+        flex: 420,
+        checkedIn: true,
+        department: 'department2',
     },
 };
 const server = () => {
@@ -35,6 +53,23 @@ const server = () => {
         if (db[userid]) return res.status(200).json({"user": db[userid]});
         
         return res.status(400).json({"msg": "user does not exist"});
+    });
+    app.get('/api/workers', (req, res) => {
+
+        const workers: {[department: string]: string[]} = {};
+
+        const filtered = Object.entries(db).filter((user) => user[1].checkedIn);
+        const mapped = filtered.map((entryKeyPair) => entryKeyPair[1]);
+
+        for (let index in mapped) {
+            const worker = mapped[index];
+            if (!workers[worker.department]) {
+                workers[worker.department] = [];
+            }
+            workers[worker.department].push(worker.name);
+        }
+
+        return res.status(200).json({"workers": workers});
     });
 
     app.post('/api/cardscanned', (req, res) => {
