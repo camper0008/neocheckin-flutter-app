@@ -5,6 +5,7 @@ import 'package:neocheckin/components/card_reader_input.dart';
 import 'package:neocheckin/components/option.dart';
 import 'package:neocheckin/components/worker_display.dart';
 import 'components/flex_display.dart';
+import 'utils/http_request.dart';
 import 'utils/time.dart';
 
 void main() {
@@ -114,15 +115,27 @@ class _HomePageState extends State<HomePage> {
           ),
           CardReaderInput(
             onSubmitted: (String value) {
-              _setOption(-1);
-              _addCancelButton(
-                CancelButtonController(
-                  action: 'Check in with id $value', 
-                  callback: (){_setName('Sent request with $value');},
-                  duration: 5,
-                  unmountCallback: _removeCancelButton,
-                )
-              );
+              void func () async{
+                var data = await HttpRequest.get('http://localhost:8079/api/user/$value');
+                _setName(data['user']['username']);
+                _setCheckOutState(data['user']['checkedIn']);
+
+                _setOption(-1);
+                _addCancelButton(
+                  CancelButtonController(
+                    action: 'Check in with id $value', 
+                    callback: (){
+                      Map<String, dynamic> httpReq = {
+                        "userid": value,
+                      };
+                      HttpRequest.post('http://localhost:8079/api/cardscanned', httpReq);
+                    },
+                    duration: 5,
+                    unmountCallback: _removeCancelButton,
+                  )
+                );
+              }
+              func();
             },
           ),
         ],
