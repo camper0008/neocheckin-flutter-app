@@ -40,7 +40,7 @@ class _HomePageState extends State<HomePage> {
   int _optionSelected = -1;
   String _name = 'User';
   bool _checkedIn = false;
-
+  Map<String, List<String>> _workers = {};
 
   void _setOption(int option) {
     setState(() {
@@ -50,6 +50,27 @@ class _HomePageState extends State<HomePage> {
   void _setName(String name) {
     setState(() {
       _name = name;
+    });
+  }
+  void _updateWorkers() {
+    (() async {
+      Map<String, dynamic> body = await HttpRequest.get('http://localhost:8079/api/workers');
+      if (body['error_msg'].runtimeType != null.runtimeType) return;
+      Map<String, List<String>> data = body['workers'].map<String, List<String>>((key, value) {
+        List<String> newArray = [];
+        for (int i = 0; i < value.length; ++i) {
+          newArray.add(value[i].toString());
+        }
+        return MapEntry(key.toString(), newArray);
+      });
+      setState(() {
+        _workers = data;
+      });
+    })();
+  }
+  void _setFlex(int seconds) {
+    setState(() {
+      _flex.setSeconds(seconds);
     });
   }
   void _setCheckOutState(bool option) {
@@ -69,6 +90,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _updateWorkers();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
@@ -81,10 +108,7 @@ class _HomePageState extends State<HomePage> {
             alignment: Alignment.centerRight,
             child: Padding(
               padding: const EdgeInsets.only(right: 64.0),
-              child: WorkerDisplay(workers: {
-                'department': List.filled(4, 'camper'),
-                'department2': List.filled(4, 'camper'),
-              }),
+              child: WorkerDisplay(workers: _workers),
             ),
           ),
           Column(
@@ -115,27 +139,28 @@ class _HomePageState extends State<HomePage> {
           ),
           CardReaderInput(
             onSubmitted: (String value) {
-              void func () async{
-                var data = await HttpRequest.get('http://localhost:8079/api/user/$value');
-                _setName(data['user']['username']);
-                _setCheckOutState(data['user']['checkedIn']);
-
+              (() async{
+                Map<String, dynamic> body = await HttpRequest.get('http://localhost:8079/api/user/$value');
+                if (body['error_msg'].runtimeType != null.runtimeType) return;
+                _setName(body['user']['name']);
+                _setCheckOutState(!body['user']['checkedIn']);
+                _setFlex(body['user']['flex']);
                 _setOption(-1);
                 _addCancelButton(
                   CancelButtonController(
-                    action: 'Check in with id $value', 
-                    callback: (){
+                    action: 'check ' + (body['user']['checkedIn'] == true ? 'ud' : 'ind'), 
+                    callback: () async {
                       Map<String, dynamic> httpReq = {
                         "userid": value,
                       };
-                      HttpRequest.post('http://localhost:8079/api/cardscanned', httpReq);
+                      await HttpRequest.post('http://localhost:8079/api/cardscanned', httpReq);
+                      _updateWorkers();
                     },
                     duration: 5,
                     unmountCallback: _removeCancelButton,
                   )
                 );
-              }
-              func();
+              })();
             },
           ),
         ],
