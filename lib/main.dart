@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:neocheckin/components/cancel_button.dart';
+import 'package:neocheckin/components/cancel_button_list.dart';
 import 'package:neocheckin/components/card_reader_input.dart';
 import 'package:neocheckin/components/option.dart';
 import 'package:neocheckin/components/worker_display.dart';
@@ -33,10 +34,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final List<CancelButtonController> _cancelButtons = [];
+  final Time _flex = Time();
   int _optionSelected = -1;
   String _name = 'User';
   bool _checkedIn = false;
-  final Time _flex = Time();
+
 
   void _setOption(int option) {
     setState(() {
@@ -53,24 +56,25 @@ class _HomePageState extends State<HomePage> {
       _checkedIn = option;
     });
   }
+  void _addCancelButton(CancelButtonController cancelButton) {
+    setState(() {
+      _cancelButtons.add(cancelButton);
+    });
+  }
+  void _removeCancelButton(CancelButtonController cancelButton) {
+    setState(() {
+      _cancelButtons.removeWhere((p) => p == cancelButton);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
-          Align(
-            alignment: Alignment.bottomLeft,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 16.0, bottom: 16.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children:
-                  [
-                    CancelButton(action: 'Gåtur', callback: (){_setName('yea');})
-                  ],
-              ),
-            ),
+          CancelButtonList(
+            cancelButtons: _cancelButtons,
+            removeCancelButton: _removeCancelButton,
           ),
           Align(
             alignment: Alignment.centerRight,
@@ -111,6 +115,14 @@ class _HomePageState extends State<HomePage> {
           CardReaderInput(
             onSubmitted: (String value) {
               _setOption(-1);
+              _addCancelButton(
+                CancelButtonController(
+                  action: 'Check in with id $value', 
+                  callback: (){_setName('Sent request with $value');},
+                  duration: 5,
+                  unmountCallback: _removeCancelButton,
+                )
+              );
             },
           ),
         ],
