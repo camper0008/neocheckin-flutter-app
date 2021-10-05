@@ -14,7 +14,8 @@ class HttpRequest {
       if (response.statusCode < 400) {
         return json.decode(response.body);
       } else {
-        throw Exception('Failed GET request to \'$url\'.');
+        Map<String, dynamic> decoded = json.decode(response.body);
+        throw Exception('Failed GET request to \'$url\': ' + decoded['msg'].toString());
       }
     } catch(err) {
       return json.decode("{ \"error_msg\": \"Something went wrong: $err\" }");
@@ -34,7 +35,8 @@ class HttpRequest {
       if (response.statusCode < 400) {
         return json.decode(response.body);
       } else {
-        throw Exception('Failed POST request to \'$url\': $response');
+        Map<String, dynamic> decoded = json.decode(response.body);
+        throw Exception('Failed GET request to \'$url\': ' + decoded['msg'].toString());
       }
     } catch(err) {
       return json.decode("{ \"error_msg\": \"Something went wrong: $err\" }");
