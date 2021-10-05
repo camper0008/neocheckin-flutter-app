@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:neocheckin/components/cancel_button.dart';
+import 'package:neocheckin/components/card_reader_input.dart';
 import 'package:neocheckin/components/option.dart';
 import 'package:neocheckin/components/worker_display.dart';
 import 'components/flex_display.dart';
@@ -35,8 +37,6 @@ class _HomePageState extends State<HomePage> {
   String _name = 'User';
   bool _checkedIn = false;
   final Time _flex = Time();
-  final FocusNode _cardFieldFocusNode = FocusNode(skipTraversal: true, canRequestFocus: true, descendantsAreFocusable: true);
-  final TextEditingController _cardFieldController = TextEditingController();
 
   void _setOption(int option) {
     setState(() {
@@ -55,49 +55,19 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  void initState() {
-    _cardFieldFocusNode.addListener(() {
-      if (!_cardFieldFocusNode.hasFocus) {
-        _cardFieldFocusNode.requestFocus();
-      }
-    });
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _cardFieldFocusNode.dispose();
-    _cardFieldController.dispose();
-
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
-          SizedBox(
-            width: 0,
-            child: TextField(
-              autofocus: true,
-              onSubmitted: (String value) {
-                _setOption(-1);
-                _cardFieldController.clear();
-                _cardFieldFocusNode.requestFocus();
-              },
-              focusNode: _cardFieldFocusNode,
-              controller: _cardFieldController,
-            ),
-          ),
           Align(
             alignment: Alignment.bottomLeft,
             child: Padding(
-              padding: const EdgeInsets.only(bottom: 16.0, left: 16.0),
-              child: Row(
-                children: 
-                  const [
-                    Text('cancel buttons should go here')
+              padding: const EdgeInsets.only(left: 16.0, bottom: 16.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children:
+                  [
+                    CancelScanButton(action: 'Gåtur', callback: (){_setName('yea');})
                   ],
               ),
             ),
@@ -138,7 +108,11 @@ class _HomePageState extends State<HomePage> {
               ),
             ],
           ),
-          
+          CardReaderInput(
+            onSubmitted: (String value) {
+              _setOption(-1);
+            },
+          ),
         ],
       ),
     );
