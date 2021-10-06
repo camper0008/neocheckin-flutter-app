@@ -18,7 +18,7 @@ class CancelButtonController {
       }
     );
 
-    _displayCounter = duration * 10;
+    _displayCounter = duration;
   }
 
   void decreaseCounter() {
@@ -26,9 +26,7 @@ class CancelButtonController {
   }
 
   String getDisplayString() {
-    return _displayCounter.toString()
-      .padLeft(2, '0').split('')
-      .reduce((prev, curr) => prev + '.' + curr);
+    return _displayCounter.toString();
   }
 }
 
@@ -51,7 +49,7 @@ class _CancelButtonState extends State<CancelButton> {
 
   void _createDisplayTimer(CancelButton widget) {
     _displayTimer = Timer.periodic(
-      const Duration(milliseconds: 100), 
+      const Duration(seconds: 1), 
       (timer) {
         if (!mounted) { timer.cancel(); return;}
         if (_controller._displayCounter < 1) {
