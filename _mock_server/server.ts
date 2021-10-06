@@ -19,28 +19,28 @@ const db: DbInterface = {
         flex: 10000,
         working: false,
         department: 'department0',
-        photo: "https://via.placeholder.com/240x320?text=employee0"
+        photo: "iVBORw0KGgoAAAANSUhEUgAAAPAAAAFABAMAAABwxuxgAAAAG1BMVEXMzMyWlpbFxcWqqqqcnJy3t7e+vr6xsbGjo6OSPOvNAAAACXBIWXMAAA7EAAAOxAGVKw4bAAACKElEQVR4nO3WT47aMBTH8UdIKMs4CX+WgelIXYaKAyRzgiD1ALSLqkuoeoBxVXHuPscemM6qSJ6hUr8fiScDT/kFx3EQAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+F+k+b8XnGzL+ibBK2MebhJsT9+WtwhOqjrp6ighybbqNelTdRh3Jx38WPZD8F33U8YLca+hxdd3+smxjxL82ZiFpIvKLuwvU6dlZWcueGKM2Wc6q+nct/g6neugiRLcne41z/SZmcum0cFE3+aSll82rZhaVrlv8XVa6Pp6jJHrftTukJYi5qCHdIPjQYN3jzKdie1l1/iW0KgXYdTGCHZzN2p1PqWrw0Djc9n0kpVybHTgW3wdueAo20tarNfv81RnsBvOoBhq7k4jWcqq1cFTi6vxgke6iEzhZrALkXpgrUa/M3pamu5bLo1xpnrljjf/M7g9B49n2SK0+Bpvcfl5uwQX4RrbYaonpSb5Fl+H2ylKsEvK+kvwTNduc15cUum8hpahZtE2kLEefdVegvWmsfvz7SR214QWX+NtmYn5ft89+8Xm410lwway1g1Edt0+tPga8SFxNKZ8do2XuoLOW6Zbe08toeoaK+IET2x4KoRVvV3uh7cfzEm/dVPvW0JNNq/zR+DlA3E8e42UvwhOI83r1cFx7tnrg7/aOA/9q4Nt9Ua5L4M3p7cKBgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwM38BtQgUAi6FiWHAAAAAElFTkSuQmCC"
     },
     1: {
         name: 'testuser1',
         flex: 20000,
         working: true,
         department: 'department0',
-        photo: "https://via.placeholder.com/320x240?text=employee1"
+        photo: "iVBORw0KGgoAAAANSUhEUgAAAPAAAAFABAMAAABwxuxgAAAAG1BMVEXMzMyWlpbFxcWqqqqcnJy3t7e+vr6xsbGjo6OSPOvNAAAACXBIWXMAAA7EAAAOxAGVKw4bAAACKElEQVR4nO3WT47aMBTH8UdIKMs4CX+WgelIXYaKAyRzgiD1ALSLqkuoeoBxVXHuPscemM6qSJ6hUr8fiScDT/kFx3EQAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+F+k+b8XnGzL+ibBK2MebhJsT9+WtwhOqjrp6ighybbqNelTdRh3Jx38WPZD8F33U8YLca+hxdd3+smxjxL82ZiFpIvKLuwvU6dlZWcueGKM2Wc6q+nct/g6neugiRLcne41z/SZmcum0cFE3+aSll82rZhaVrlv8XVa6Pp6jJHrftTukJYi5qCHdIPjQYN3jzKdie1l1/iW0KgXYdTGCHZzN2p1PqWrw0Djc9n0kpVybHTgW3wdueAo20tarNfv81RnsBvOoBhq7k4jWcqq1cFTi6vxgke6iEzhZrALkXpgrUa/M3pamu5bLo1xpnrljjf/M7g9B49n2SK0+Bpvcfl5uwQX4RrbYaonpSb5Fl+H2ylKsEvK+kvwTNduc15cUum8hpahZtE2kLEefdVegvWmsfvz7SR214QWX+NtmYn5ft89+8Xm410lwway1g1Edt0+tPga8SFxNKZ8do2XuoLOW6Zbe08toeoaK+IET2x4KoRVvV3uh7cfzEm/dVPvW0JNNq/zR+DlA3E8e42UvwhOI83r1cFx7tnrg7/aOA/9q4Nt9Ua5L4M3p7cKBgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwM38BtQgUAi6FiWHAAAAAElFTkSuQmCC"
     },
     2: {
         name: 'testuser2',
         flex: 30000,
         working: true,
         department: 'department2',
-        photo: "https://via.placeholder.com/400x400?text=employee2"
+        photo: "iVBORw0KGgoAAAANSUhEUgAAAPAAAAFABAMAAABwxuxgAAAAG1BMVEXMzMyWlpbFxcWqqqqcnJy3t7e+vr6xsbGjo6OSPOvNAAAACXBIWXMAAA7EAAAOxAGVKw4bAAACKElEQVR4nO3WT47aMBTH8UdIKMs4CX+WgelIXYaKAyRzgiD1ALSLqkuoeoBxVXHuPscemM6qSJ6hUr8fiScDT/kFx3EQAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+F+k+b8XnGzL+ibBK2MebhJsT9+WtwhOqjrp6ighybbqNelTdRh3Jx38WPZD8F33U8YLca+hxdd3+smxjxL82ZiFpIvKLuwvU6dlZWcueGKM2Wc6q+nct/g6neugiRLcne41z/SZmcum0cFE3+aSll82rZhaVrlv8XVa6Pp6jJHrftTukJYi5qCHdIPjQYN3jzKdie1l1/iW0KgXYdTGCHZzN2p1PqWrw0Djc9n0kpVybHTgW3wdueAo20tarNfv81RnsBvOoBhq7k4jWcqq1cFTi6vxgke6iEzhZrALkXpgrUa/M3pamu5bLo1xpnrljjf/M7g9B49n2SK0+Bpvcfl5uwQX4RrbYaonpSb5Fl+H2ylKsEvK+kvwTNduc15cUum8hpahZtE2kLEefdVegvWmsfvz7SR214QWX+NtmYn5ft89+8Xm410lwway1g1Edt0+tPga8SFxNKZ8do2XuoLOW6Zbe08toeoaK+IET2x4KoRVvV3uh7cfzEm/dVPvW0JNNq/zR+DlA3E8e42UvwhOI83r1cFx7tnrg7/aOA/9q4Nt9Ua5L4M3p7cKBgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwM38BtQgUAi6FiWHAAAAAElFTkSuQmCC"
     },
     3: {
         name: 'testuser3',
         flex: 40000,
         working: true,
         department: 'department2',
-        photo: "https://via.placeholder.com/240x320?text=employee3"
+        photo: "iVBORw0KGgoAAAANSUhEUgAAAPAAAAFABAMAAABwxuxgAAAAG1BMVEXMzMyWlpbFxcWqqqqcnJy3t7e+vr6xsbGjo6OSPOvNAAAACXBIWXMAAA7EAAAOxAGVKw4bAAACKElEQVR4nO3WT47aMBTH8UdIKMs4CX+WgelIXYaKAyRzgiD1ALSLqkuoeoBxVXHuPscemM6qSJ6hUr8fiScDT/kFx3EQAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+F+k+b8XnGzL+ibBK2MebhJsT9+WtwhOqjrp6ighybbqNelTdRh3Jx38WPZD8F33U8YLca+hxdd3+smxjxL82ZiFpIvKLuwvU6dlZWcueGKM2Wc6q+nct/g6neugiRLcne41z/SZmcum0cFE3+aSll82rZhaVrlv8XVa6Pp6jJHrftTukJYi5qCHdIPjQYN3jzKdie1l1/iW0KgXYdTGCHZzN2p1PqWrw0Djc9n0kpVybHTgW3wdueAo20tarNfv81RnsBvOoBhq7k4jWcqq1cFTi6vxgke6iEzhZrALkXpgrUa/M3pamu5bLo1xpnrljjf/M7g9B49n2SK0+Bpvcfl5uwQX4RrbYaonpSb5Fl+H2ylKsEvK+kvwTNduc15cUum8hpahZtE2kLEefdVegvWmsfvz7SR214QWX+NtmYn5ft89+8Xm410lwway1g1Edt0+tPga8SFxNKZ8do2XuoLOW6Zbe08toeoaK+IET2x4KoRVvV3uh7cfzEm/dVPvW0JNNq/zR+DlA3E8e42UvwhOI83r1cFx7tnrg7/aOA/9q4Nt9Ua5L4M3p7cKBgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwM38BtQgUAi6FiWHAAAAAElFTkSuQmCC"
     },
 };
 const server = () => {

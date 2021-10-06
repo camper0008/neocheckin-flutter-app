@@ -8,7 +8,7 @@ Employee:
     flex: number,
     working: boolean,
     department: string,
-    photo: string
+    photo: string // Base64 Image
 }
 ```
 
