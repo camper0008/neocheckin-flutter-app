@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:neocheckin/components/cancel_button.dart';
 import 'package:neocheckin/components/cancel_button_list.dart';
 import 'package:neocheckin/components/card_reader_input.dart';
-import 'package:neocheckin/components/option.dart';
+import 'package:neocheckin/components/option_display.dart';
 import 'package:neocheckin/components/employee_list.dart';
+import 'package:neocheckin/models/option.dart';
 import 'package:neocheckin/responses/employee.dart';
 import 'package:neocheckin/responses/employees_working.dart';
 import 'package:neocheckin/components/flex_display.dart';
@@ -38,12 +39,12 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final List<CancelButtonController> _cancelButtons = [];
-  int _optionSelected = -1;
+  Option _optionSelected = NullOption();
   Employee _activeEmployee = NullEmployee();
   Map<String, List<Employee>> _employees = {};
   String _errorMessage = '';
 
-  void _setOption(int option) {
+  void _setOption(Option option) {
     setState(() {
       _optionSelected = option;
     });
@@ -108,11 +109,11 @@ class _HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.only(bottom: 36), 
                 child: FlexDisplay(employee: _activeEmployee, setEmployee: _setEmployee),
               ),
-              Option(
+              OptionDisplay(
                 selected: _optionSelected, 
-                options: const [
-                  'Gåtur', 
-                  'Aftale',
+                options: [
+                  Option(id: 0, name: 'Gåtdwadwur'), 
+                  Option(id: 1, name: 'Aftale'),
                 ], 
                 stateFunction: _setOption
               ),
@@ -125,7 +126,7 @@ class _HomePageState extends State<HomePage> {
               Employee employee = response.employee;
               if (response.error == 'none') {
                 _setEmployee(response.employee);
-                _setOption(-1);
+                Option optionCache = _optionSelected;
                 _updateCancelButtons(
                   CancelButtonController(
                     action: 'check ' 
@@ -135,6 +136,7 @@ class _HomePageState extends State<HomePage> {
                     callback: () async {
                       Map<String, dynamic> httpReq = {
                         "employeeId": value,
+                        "optionId": optionCache.id,
                         "checkingIn": !employee.working, 
                       };
                       await HttpRequest.post('http://localhost:8079/api/employee/cardscanned', httpReq, _displayError);
@@ -144,6 +146,7 @@ class _HomePageState extends State<HomePage> {
                     unmountCallback: (CancelButtonController controller) { _updateCancelButtons(controller, remove: true); },
                   )
                 );
+                _setOption(NullOption());
               }
             }
           ),
