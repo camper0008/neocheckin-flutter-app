@@ -13,6 +13,26 @@ interface Employee {
     photo: string;
 }
 
+interface Option {
+    id: number;
+    name: string;
+}
+
+const options: Option[] = [
+    {
+        id: 0,
+        name: 'Gåtur'
+    },
+    {
+        id: 1,
+        name: 'Efter aftale'
+    },
+    {
+        id: 2,
+        name: 'Biblioteksvagt'
+    }
+]
+
 const db: DbInterface = {
     0: {
         name: 'testuser0',
@@ -87,6 +107,13 @@ const server = () => {
         return res.status(200).json({
             employees: employeesUnordered, 
             ordered: employeesOrdered, 
+        });
+    });
+
+    app.get('/api/options/available', (req, res) => {
+
+        return res.status(200).json({
+            options: options, 
         });
     });
 

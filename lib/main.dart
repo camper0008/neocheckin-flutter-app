@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:neocheckin/components/cancel_button.dart';
 import 'package:neocheckin/components/cancel_button_list.dart';
@@ -9,6 +10,7 @@ import 'package:neocheckin/responses/employee.dart';
 import 'package:neocheckin/responses/employees_working.dart';
 import 'package:neocheckin/components/flex_display.dart';
 import 'package:neocheckin/models/employee.dart';
+import 'package:neocheckin/responses/options_available.dart';
 import 'package:neocheckin/utils/http_request.dart';
 
 void main() {
@@ -39,6 +41,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final List<CancelButtonController> _cancelButtons = [];
+  List<Option> _options = [];
   Option _optionSelected = NullOption();
   Employee _activeEmployee = NullEmployee();
   Map<String, List<Employee>> _employees = {};
@@ -53,6 +56,29 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _activeEmployee = employee;
     });
+  }
+  void _updateOptions() {
+    (() async {
+      Map<String, dynamic> body = await HttpRequest.get('http://localhost:8079/api/options/available', _displayError);
+      OptionsAvailableResponse response = OptionsAvailableResponse.fromJson(body);
+      if (response.error == 'none') {
+        bool isIdentical = (_options.length != response.options.length);
+        if (isIdentical) {
+          for (int i = 0; i < _options.length; ++i) {
+            if (_options[i].id != response.options[i].id) {
+              isIdentical = false;
+            }
+          }
+          if (isIdentical) {
+            setState(() {
+              _options = response.options;
+            });
+          }
+        }
+      }
+    })();
+
+    Timer(const Duration(minutes: 1), _updateOptions);
   }
   void _updateEmployees() {
     (() async {
@@ -84,6 +110,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _updateEmployees();
+    _updateOptions();
   }
 
   @override
@@ -111,10 +138,7 @@ class _HomePageState extends State<HomePage> {
               ),
               OptionDisplay(
                 selected: _optionSelected, 
-                options: [
-                  Option(id: 0, name: 'Gåtdwadwur'), 
-                  Option(id: 1, name: 'Aftale'),
-                ], 
+                options: _options, 
                 stateFunction: _setOption
               ),
             ],
