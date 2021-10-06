@@ -62,7 +62,7 @@ const server = () => {
     app.post('/api/employee/cardscanned', (req, res) => {
         const employeeId = parseInt(req.body.employeeId ?? '-1') ?? -1
 
-        if (!employeeId) 
+        if (employeeId === -1) 
             return res.status(400).json({ error: 'no userid given' });
         if (!db[employeeId]) 
             return res.status(400).json({ error: 'user doesnt exist' });
