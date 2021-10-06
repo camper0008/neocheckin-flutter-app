@@ -1,12 +1,11 @@
 import express from "express";
 import cors from "cors";
-import { stringify } from "querystring";
 
 interface DbInterface {
-    [key: string]: Worker;
+    [key: string]: Employee;
 }
 
-interface Worker {
+interface Employee {
     name: string,
     flex: number,
     checkedIn: boolean,
@@ -48,39 +47,49 @@ const server = () => {
     })
     app.use('/', express.static('/home/pieter/Desktop/gitlab/neocheckin/flutter-app/build/web'));
 
-    app.get('/api/user/:userid', (req, res) => {
-        const userid = req.params.userid;
-        if (db[userid]) return res.status(200).json({"user": db[userid]});
+    app.get('/api/employee/:id', (req, res) => {
+        const employeeId = req.params.id;
+        if (db[employeeId]) return res.status(200).json({employee: db[employeeId]});
         
-        return res.status(400).json({"msg": "user does not exist"});
+        return res.status(400).json({error_msg: "employee does not exist"});
     });
-    app.get('/api/workers', (req, res) => {
 
-        const workers: {[department: string]: string[]} = {};
+    app.post('/api/employee/cardscanned', (req, res) => {
+        const employeeId = req.body.employeeId
+
+        if (!employeeId) 
+            return res.status(400).json({ error_msg: 'no userid given' });
+        if (!db[employeeId]) 
+            return res.status(400).json({ error_msg: 'user doesnt exist' });
+        if (req.body.checkingIn === null || req.body.checkingIn === undefined) 
+            return res.status(400).json({ error_msg: 'checkingIn not given' })
+
+        db[employeeId].checkedIn = req.body.checkingIn;
+        
+        return res.status(200).json({ employee: db[employeeId] });
+    });
+
+    app.get('/api/employees/working', (req, res) => {
+
+        const employeesUnordered: Employee[] = [];
+        const employeesOrdered: {[department: string]: Employee[]} = {};
 
         const filtered = Object.entries(db).filter((user) => user[1].checkedIn);
         const mapped = filtered.map((entryKeyPair) => entryKeyPair[1]);
 
         for (let index in mapped) {
-            const worker = mapped[index];
-            if (!workers[worker.department]) {
-                workers[worker.department] = [];
+            const employee = mapped[index];
+            if (!employeesOrdered[employee.department]) {
+                employeesOrdered[employee.department] = [];
             }
-            workers[worker.department].push(worker.name);
+            employeesOrdered[employee.department].push(employee);
+            employeesUnordered.push(employee);
         }
 
-        return res.status(200).json({"workers": workers});
-    });
-
-    app.post('/api/cardscanned', (req, res) => {
-        const userid = req.body.userid
-
-        if (!userid) return res.status(400).json({ msg: 'no userid given' });
-        if (!db[userid]) return res.status(400).json({ msg: 'user doesnt exist' });
-        
-        db[userid].checkedIn = !db[userid].checkedIn;
-        
-        return res.status(200).json({ user: db[userid] });
+        return res.status(200).json({
+            employees: employeesUnordered, 
+            ordered: employeesOrdered, 
+        });
     });
 
     app.listen(8079, () => {
