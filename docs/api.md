@@ -12,6 +12,14 @@ Employee:
 }
 ```
 
+Option:
+```ts
+{
+    id: number,
+    name: string
+}
+```
+
 ## Errors
 In case of a status code >= 400 this will be the response instead.
 ```ts
@@ -41,6 +49,7 @@ Parameters:
 {
     employeeId: number,
     checkingIn: boolean
+    optionId: number // -1 if no option was selected, so you dont need a "default" option
 }
 ```
 ### res:
@@ -62,5 +71,17 @@ Parameters:
     ordered: {
         [department: string]: Employee[]
     }
+}
+```
+
+## GET `/api/options/available`
+### req:
+```ts
+{}
+```
+### res:
+```ts
+{
+    options: Option[],
 }
 ```
