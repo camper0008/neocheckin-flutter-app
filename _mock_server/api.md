@@ -8,7 +8,7 @@ Employee:
     flex: number,
     working: boolean,
     department: string,
-    image: string
+    photo: string
 }
 ```
 
