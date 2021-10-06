@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class HttpRequest {
-  static Future<Map<String, dynamic>> get(String url) async {
+  static Future<Map<String, dynamic>> get(String url, void Function(String) displayError) async {
     try {
       http.Response response = await http.get(
         Uri.parse(url),
@@ -15,13 +15,14 @@ class HttpRequest {
         return json.decode(response.body);
       } else {
         Map<String, dynamic> decoded = json.decode(response.body);
-        throw Exception('Failed GET request to \'$url\': ' + decoded['msg'].toString());
+        throw Exception('GET \'$url\' failed: ' + decoded['error'].toString());
       }
     } catch(err) {
-      return json.decode("{ \"error_msg\": \"Something went wrong: $err\" }");
+      displayError(err.toString());
+      return json.decode("{ \"error\": \"$err\" }");
     }
   }
-  static Future<Map<String, dynamic>> post(String url, dynamic body) async {
+  static Future<Map<String, dynamic>> post(String url, dynamic body, void Function(String) displayError) async {
     try {
       http.Response response = await http.post(
         Uri.parse(url),
@@ -36,10 +37,11 @@ class HttpRequest {
         return json.decode(response.body);
       } else {
         Map<String, dynamic> decoded = json.decode(response.body);
-        throw Exception('Failed GET request to \'$url\': ' + decoded['msg'].toString());
+        throw Exception('POST \'$url\' failed: ' + decoded['error'].toString());
       }
     } catch(err) {
-      return json.decode("{ \"error_msg\": \"Something went wrong: $err\" }");
+      displayError(err.toString());
+      return json.decode("{ \"error\": \"$err\" }");
     }
   }
 }
