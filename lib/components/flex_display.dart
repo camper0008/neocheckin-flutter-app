@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/material.dart';
@@ -5,8 +6,9 @@ import 'package:neocheckin/models/employee.dart';
 
 class FlexDisplay extends StatefulWidget {
   final Employee employee;
+  final void Function(Employee) setEmployee;
 
-  const FlexDisplay({Key? key, required this.employee}) : super(key: key);
+  const FlexDisplay({Key? key, required this.employee, required this.setEmployee}) : super(key: key);
 
   @override
   State<FlexDisplay> createState() => _FlexDisplayState();
@@ -16,6 +18,7 @@ class _FlexDisplayState extends State<FlexDisplay> {
   late String _flexPrefix;
   late Color _flexColor;
   late Employee _employee;
+  late Timer _resetTimer;
 
   _updateSelfState(Employee employee) {
     _employee = employee;
@@ -29,10 +32,13 @@ class _FlexDisplayState extends State<FlexDisplay> {
   void initState() {
     super.initState();
     _updateSelfState(widget.employee);
+    _resetTimer = Timer(const Duration(seconds: 5), (){widget.setEmployee(NullEmployee());});
   }
   @override
   void didUpdateWidget(FlexDisplay oldWidget) {
     if (oldWidget.employee.name != widget.employee.name) {
+      _resetTimer.cancel();
+      _resetTimer = Timer(const Duration(seconds: 5), (){widget.setEmployee(NullEmployee());});
       super.didUpdateWidget(oldWidget);
       _updateSelfState(widget.employee);
     }

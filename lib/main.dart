@@ -106,7 +106,7 @@ class _HomePageState extends State<HomePage> {
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.only(bottom: 36), 
-                child: FlexDisplay(employee: _activeEmployee),
+                child: FlexDisplay(employee: _activeEmployee, setEmployee: _setEmployee),
               ),
               Option(
                 selected: _optionSelected, 
