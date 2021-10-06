@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '/components/cancel_button.dart';
+import 'package:neocheckin/components/cancel_button.dart';
 
 class CancelButtonList extends StatefulWidget {
 

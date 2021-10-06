@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'dart:ui';
-import '../utils/time.dart';
+import 'package:flutter/material.dart';
+import 'package:neocheckin/utils/time.dart';
 
 class FlexDisplay extends StatefulWidget {
   final Time flex;
