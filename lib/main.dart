@@ -1,14 +1,14 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:neocheckin/components/cancel_button.dart';
 import 'package:neocheckin/components/cancel_button_list.dart';
 import 'package:neocheckin/components/card_reader_input.dart';
 import 'package:neocheckin/components/option.dart';
-import 'package:neocheckin/components/worker_display.dart';
-import 'components/flex_display.dart';
-import 'utils/http_request.dart';
-import 'utils/time.dart';
+import 'package:neocheckin/components/employee_list.dart';
+import 'package:neocheckin/responses/employees_working.dart';
+import 'package:neocheckin/components/flex_display.dart';
+import 'package:neocheckin/models/employee.dart';
+import 'package:neocheckin/utils/http_request.dart';
+import 'package:neocheckin/utils/time.dart';
 
 void main() {
   runApp(const App());
@@ -40,52 +40,24 @@ class _HomePageState extends State<HomePage> {
   final List<CancelButtonController> _cancelButtons = [];
   final Time _flex = Time();
   int _optionSelected = -1;
-  String _name = 'User';
-  bool _checkedIn = false;
-  Map<String, List<String>> _workers = {};
-  //Timer flexDisplayShowTimer = Timer(duration, callback);
-  //bool shouldShowFlexDisplay = false;
+  Employee _activeEmployee = NullEmployee();
+  Map<String, List<Employee>> _employees = {};
 
   void _setOption(int option) {
     setState(() {
       _optionSelected = option;
     });
   }
-  void _setName(String name) {
+  void _setEmployee(Employee employee) {
     setState(() {
-      _name = name;
+      _activeEmployee = employee;
     });
   }
-  void _toggleFlexVisibility(String name) {
-    setState(() {
-      _name = name;
-    });
-  }
-  void _updateWorkers() {
+  void _updateEmployees() {
     (() async {
-      Map<String, dynamic> body = await HttpRequest.get('http://localhost:8079/api/workers');
-      if (body['error_msg'].runtimeType != null.runtimeType) return;
-      Map<String, List<String>> data = body['workers'].map<String, List<String>>((key, value) {
-        List<String> newArray = [];
-        for (int i = 0; i < value.length; ++i) {
-          newArray.add(value[i].toString());
-        }
-        return MapEntry(key.toString(), newArray);
-      });
-      setState(() {
-        _workers = data;
-      });
+      Map<String, dynamic> body = await HttpRequest.get('http://localhost:8079/api/employees/working');
+      EmployeesWorkingResponse response = EmployeesWorkingResponse.fromJson(body);
     })();
-  }
-  void _setFlex(int seconds) {
-    setState(() {
-      _flex.setSeconds(seconds);
-    });
-  }
-  void _setCheckOutState(bool option) {
-    setState(() {
-      _checkedIn = option;
-    });
   }
   void _addCancelButton(CancelButtonController cancelButton) {
     setState(() {
@@ -101,7 +73,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _updateWorkers();
+    _updateEmployees();
   }
 
   @override
@@ -117,7 +89,7 @@ class _HomePageState extends State<HomePage> {
             alignment: Alignment.centerRight,
             child: Padding(
               padding: const EdgeInsets.only(right: 64.0),
-              child: WorkerDisplay(workers: _workers),
+              child: EmployeeList(employees: _employees),
             ),
           ),
           Column(
@@ -149,9 +121,9 @@ class _HomePageState extends State<HomePage> {
           CardReaderInput(
             onSubmitted: (String value) {
               (() async{
-                Map<String, dynamic> body = await HttpRequest.get('http://localhost:8079/api/user/$value');
+                Map<String, dynamic> body = await HttpRequest.get('http://localhost:8079/api/employee/$value');
                 if (body['error_msg'].runtimeType != null.runtimeType) return;
-                _setName(body['user']['name']);
+                _setUser(body['user']['name']);
                 _setCheckOutState(!body['user']['checkedIn']);
                 _setFlex(body['user']['flex']);
                 _setOption(-1);
@@ -166,7 +138,7 @@ class _HomePageState extends State<HomePage> {
                         "userid": value,
                       };
                       await HttpRequest.post('http://localhost:8079/api/cardscanned', httpReq);
-                      _updateWorkers();
+                      _updateEmployees();
                     },
                     duration: 5,
                     unmountCallback: _removeCancelButton,
