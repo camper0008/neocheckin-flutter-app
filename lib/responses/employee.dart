@@ -9,6 +9,8 @@ class EmployeeResponse implements Response {
   EmployeeResponse({required this.employee, this.error = 'none'});
 
   EmployeeResponse.fromJson(Map<String, dynamic> json)
-    : employee = json['employee'],
+    : employee = (json['employee'].runtimeType != null.runtimeType) 
+      ? Employee.fromJson(json['employee'])
+      : NullEmployee(),
     error = json['error'] ?? 'none';
 }
