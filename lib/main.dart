@@ -130,7 +130,7 @@ class _HomePageState extends State<HomePage> {
                 _updateCancelButtons(
                   CancelButtonController(
                     action: 'check ' 
-                      + (employee.working ? 'ud med valg $_optionSelected' : 'ind') 
+                      + (employee.working ? ('ud' + (_optionSelected.id != -1 ? ' med valg ' + _optionSelected.name : '')) : 'ind') 
                       + ' for ' 
                       + employee.name.split(' ')[0], 
                     callback: () async {
