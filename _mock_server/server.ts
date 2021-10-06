@@ -8,7 +8,7 @@ interface DbInterface {
 interface Employee {
     name: string,
     flex: number,
-    checkedIn: boolean,
+    working: boolean,
     department: string;
 }
 
@@ -16,25 +16,25 @@ const db: DbInterface = {
     "user": {
         name: 'testuser',
         flex: 50000,
-        checkedIn: false,
+        working: false,
         department: 'department1',
     },
     "user2": {
         name: 'testuser2',
         flex: 420,
-        checkedIn: true,
+        working: true,
         department: 'department1',
     },
     "user3": {
         name: 'testuser3',
         flex: 420,
-        checkedIn: true,
+        working: true,
         department: 'department2',
     },
     "user4": {
         name: 'testuser4',
         flex: 420,
-        checkedIn: true,
+        working: true,
         department: 'department2',
     },
 };
@@ -64,7 +64,7 @@ const server = () => {
         if (req.body.checkingIn === null || req.body.checkingIn === undefined) 
             return res.status(400).json({ error_msg: 'checkingIn not given' })
 
-        db[employeeId].checkedIn = req.body.checkingIn;
+        db[employeeId].working = req.body.checkingIn;
         
         return res.status(200).json({ employee: db[employeeId] });
     });
@@ -74,7 +74,7 @@ const server = () => {
         const employeesUnordered: Employee[] = [];
         const employeesOrdered: {[department: string]: Employee[]} = {};
 
-        const filtered = Object.entries(db).filter((user) => user[1].checkedIn);
+        const filtered = Object.entries(db).filter((user) => user[1].working);
         const mapped = filtered.map((entryKeyPair) => entryKeyPair[1]);
 
         for (let index in mapped) {

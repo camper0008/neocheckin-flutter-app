@@ -6,7 +6,7 @@ Employee:
 {
     name: string,
     flex: number,
-    checkedIn: boolean,
+    working: boolean,
     department: string;
 }
 ```
