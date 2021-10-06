@@ -23,7 +23,6 @@ class _FlexDisplayState extends State<FlexDisplay> {
     bool isNegative = _employee.flex.isNegative();
     _flexPrefix = isNegative ? '-' : '+';
     _flexColor = isNegative ? Colors.red : Colors.green;
-
   }
 
   @override
@@ -33,8 +32,10 @@ class _FlexDisplayState extends State<FlexDisplay> {
   }
   @override
   void didUpdateWidget(FlexDisplay oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    _updateSelfState(widget.employee);
+    if (oldWidget.employee.name != widget.employee.name) {
+      super.didUpdateWidget(oldWidget);
+      _updateSelfState(widget.employee);
+    }
   }
 
   @override
@@ -58,7 +59,10 @@ class _FlexDisplayState extends State<FlexDisplay> {
             children: [
               Padding(
                 padding: const EdgeInsets.only(right: 40), 
-                child: Image.memory(base64Decode(_employee.photo)),
+                child: Image.memory(
+                  base64Decode(_employee.photo),
+                  gaplessPlayback: true,
+                ),
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
