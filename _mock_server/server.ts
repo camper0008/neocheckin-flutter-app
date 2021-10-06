@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 
 interface DbInterface {
-    [key: string]: Employee;
+    [key: number]: Employee;
 }
 
 interface Employee {
@@ -10,32 +10,37 @@ interface Employee {
     flex: number,
     working: boolean,
     department: string;
+    photo: string;
 }
 
 const db: DbInterface = {
-    "user": {
-        name: 'testuser',
-        flex: 50000,
+    0: {
+        name: 'testuser0',
+        flex: 10000,
         working: false,
-        department: 'department1',
+        department: 'department0',
+        photo: "https://via.placeholder.com/240x320?text=employee0"
     },
-    "user2": {
+    1: {
+        name: 'testuser1',
+        flex: 20000,
+        working: true,
+        department: 'department0',
+        photo: "https://via.placeholder.com/320x240?text=employee1"
+    },
+    2: {
         name: 'testuser2',
-        flex: 420,
+        flex: 30000,
         working: true,
-        department: 'department1',
+        department: 'department2',
+        photo: "https://via.placeholder.com/400x400?text=employee2"
     },
-    "user3": {
+    3: {
         name: 'testuser3',
-        flex: 420,
+        flex: 40000,
         working: true,
         department: 'department2',
-    },
-    "user4": {
-        name: 'testuser4',
-        flex: 420,
-        working: true,
-        department: 'department2',
+        photo: "https://via.placeholder.com/240x320?text=employee3"
     },
 };
 const server = () => {

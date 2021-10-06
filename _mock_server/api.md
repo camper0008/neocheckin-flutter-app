@@ -7,7 +7,8 @@ Employee:
     name: string,
     flex: number,
     working: boolean,
-    department: string;
+    department: string,
+    image: string
 }
 ```
 
@@ -21,8 +22,11 @@ In case of a status code >= 400 this will be the response instead.
 
 ## GET `/api/employee/:id`
 ### req:
+Parameters:
 ```ts
-{}
+{
+    id: number
+}
 ```
 ### res:
 ```ts
