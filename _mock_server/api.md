@@ -16,7 +16,7 @@ Employee:
 In case of a status code >= 400 this will be the response instead.
 ```ts
 {
-    error_msg: string
+    error: string
 }
 ```
 

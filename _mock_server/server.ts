@@ -56,18 +56,18 @@ const server = () => {
         const employeeId = req.params.id;
         if (db[employeeId]) return res.status(200).json({employee: db[employeeId]});
         
-        return res.status(400).json({error_msg: "employee does not exist"});
+        return res.status(400).json({error: "employee does not exist"});
     });
 
     app.post('/api/employee/cardscanned', (req, res) => {
         const employeeId = req.body.employeeId
 
         if (!employeeId) 
-            return res.status(400).json({ error_msg: 'no userid given' });
+            return res.status(400).json({ error: 'no userid given' });
         if (!db[employeeId]) 
-            return res.status(400).json({ error_msg: 'user doesnt exist' });
+            return res.status(400).json({ error: 'user doesnt exist' });
         if (req.body.checkingIn === null || req.body.checkingIn === undefined) 
-            return res.status(400).json({ error_msg: 'checkingIn not given' })
+            return res.status(400).json({ error: 'checkingIn not given' })
 
         db[employeeId].working = req.body.checkingIn;
         
