@@ -53,14 +53,14 @@ const server = () => {
     app.use('/', express.static('/home/pieter/Desktop/gitlab/neocheckin/flutter-app/build/web'));
 
     app.get('/api/employee/:id', (req, res) => {
-        const employeeId = req.params.id;
+        const employeeId = parseInt(req.params.id) ?? -1;
         if (db[employeeId]) return res.status(200).json({employee: db[employeeId]});
         
         return res.status(400).json({error: "employee does not exist"});
     });
 
     app.post('/api/employee/cardscanned', (req, res) => {
-        const employeeId = req.body.employeeId
+        const employeeId = parseInt(req.body.employeeId ?? '-1') ?? -1
 
         if (!employeeId) 
             return res.status(400).json({ error: 'no userid given' });
