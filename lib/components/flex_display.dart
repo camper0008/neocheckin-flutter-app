@@ -62,6 +62,8 @@ class _FlexDisplayState extends State<FlexDisplay> {
                 child: Image.memory(
                   base64Decode(_employee.photo),
                   gaplessPlayback: true,
+                  width: 240,
+                  height: 320,
                 ),
               ),
               Column(
