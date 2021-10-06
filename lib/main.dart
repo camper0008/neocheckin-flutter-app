@@ -62,18 +62,18 @@ class _HomePageState extends State<HomePage> {
       Map<String, dynamic> body = await HttpRequest.get('http://localhost:8079/api/options/available', _displayError);
       OptionsAvailableResponse response = OptionsAvailableResponse.fromJson(body);
       if (response.error == 'none') {
-        bool isIdentical = (_options.length != response.options.length);
+        bool isIdentical = (_options.length == response.options.length);
         if (isIdentical) {
           for (int i = 0; i < _options.length; ++i) {
             if (_options[i].id != response.options[i].id) {
               isIdentical = false;
             }
           }
-          if (isIdentical) {
-            setState(() {
-              _options = response.options;
-            });
-          }
+        }
+        if (!isIdentical) {
+          setState(() {
+            _options = response.options;
+          });
         }
       }
     })();
