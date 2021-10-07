@@ -28,8 +28,13 @@ class App extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const Scaffold(
-        body: HomePage()
+      home: const DefaultTextStyle(
+        style: TextStyle(
+          fontFamily: 'Roboto',
+        ),
+        child: Scaffold(
+          body: HomePage()
+        ),
       ),
     );
   }
