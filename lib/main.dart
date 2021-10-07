@@ -106,7 +106,7 @@ class _HomePageState extends State<HomePage> {
           children: [
             ConstrainedSidebar(
               child: Padding(
-                padding: const EdgeInsets.only(left: 8.0),
+                padding: const EdgeInsets.only(left: 16.0),
                 child: CancelButtonList(
                   cancelButtons: _cancelButtons,
                   removeCancelButton: (CancelButtonController controller) { _updateCancelButtons(controller, remove: true); },
@@ -115,7 +115,7 @@ class _HomePageState extends State<HomePage> {
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
@@ -137,7 +137,7 @@ class _HomePageState extends State<HomePage> {
             ),
             ConstrainedSidebar(
               child: Padding(
-                padding: const EdgeInsets.only(right: 8),
+                padding: const EdgeInsets.only(right: 16),
                 child: EmployeeList(employees: _employees),
               ),
             ),
