@@ -154,10 +154,13 @@ class _HomePageState extends State<HomePage> {
             Option optionCache = _optionSelected;
             _updateCancelButtons(
               CancelButtonController(
+                duration: 5,
+
                 action: 'check ' 
                   + (employee.working ? ('ud' + (_optionSelected.id != -1 ? ' (' + _optionSelected.name.toLowerCase() + ')' : '')) : 'ind') 
                   + ' for ' 
                   + employee.name.split(' ')[0], 
+
                 callback: () async {
                   Map<String, dynamic> httpReq = {
                     "employeeId": value,
@@ -167,8 +170,9 @@ class _HomePageState extends State<HomePage> {
                   await HttpRequest.post('$apiUrl/employee/cardscanned', httpReq, _displayError);
                   _updateEmployees();
                 },
-                duration: 5,
+
                 unmountCallback: (CancelButtonController controller) { _updateCancelButtons(controller, remove: true); },
+
               )
             );
             _setOption(NullOption());
