@@ -59,7 +59,7 @@ class _HomePageState extends State<HomePage> {
   }
   void _updateOptions() {
     (() async {
-      Map<String, dynamic> body = await HttpRequest.get('http://localhost:8079/api/options/available', _displayError);
+      Map<String, dynamic> body = await HttpRequest.get('$apiUrl/options/available', _displayError);
       OptionsAvailableResponse response = OptionsAvailableResponse.fromJson(body);
       if (response.error == 'none') {
         bool isIdentical = (_options.length == response.options.length);
@@ -82,7 +82,7 @@ class _HomePageState extends State<HomePage> {
   }
   void _updateEmployees() {
     (() async {
-      Map<String, dynamic> body = await HttpRequest.get('http://localhost:8079/api/employees/working', _displayError);
+      Map<String, dynamic> body = await HttpRequest.get('$apiUrl/employees/working', _displayError);
       EmployeesWorkingResponse response = EmployeesWorkingResponse.fromJson(body);
       if (response.error == 'none') {
         setState(() {
@@ -145,7 +145,7 @@ class _HomePageState extends State<HomePage> {
           ),
           CardReaderInput(
             onSubmitted: (String value) async {
-              Map<String, dynamic> body = await HttpRequest.get('http://localhost:8079/api/employee/$value', _displayError);
+              Map<String, dynamic> body = await HttpRequest.get('$apiUrl/employee/$value', _displayError);
               EmployeeResponse response = EmployeeResponse.fromJson(body);
               Employee employee = response.employee;
               if (response.error == 'none') {
@@ -163,7 +163,7 @@ class _HomePageState extends State<HomePage> {
                         "optionId": optionCache.id,
                         "checkingIn": !employee.working, 
                       };
-                      await HttpRequest.post('http://localhost:8079/api/employee/cardscanned', httpReq, _displayError);
+                      await HttpRequest.post('$apiUrl/employee/cardscanned', httpReq, _displayError);
                       _updateEmployees();
                     },
                     duration: 5,
