@@ -47,6 +47,7 @@ class _FlexDisplayState extends State<FlexDisplay> {
   @override
   Widget build(BuildContext build) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Padding(
           padding: const EdgeInsets.only(bottom: 36),

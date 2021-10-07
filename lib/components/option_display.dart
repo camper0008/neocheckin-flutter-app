@@ -50,7 +50,7 @@ class _OptionDisplayState extends State<OptionDisplay> {
           ),
           onPressed: () {_updateParentState(option);},
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
             child: Text(
               option.name,
               style: const TextStyle(

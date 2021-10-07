@@ -117,17 +117,19 @@ class _HomePageState extends State<HomePage> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
                     if (_activeEmployee is! NullEmployee)
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 36), 
+                      Expanded(
                         child: FlexDisplay(employee: _activeEmployee, setEmployee: _setEmployee),
                       ),
-                    OptionDisplay(
-                      selected: _optionSelected, 
-                      options: _options, 
-                      stateFunction: _setOption
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 16, top: 8),
+                      child: OptionDisplay(
+                        selected: _optionSelected, 
+                        options: _options, 
+                        stateFunction: _setOption
+                      ),
                     ),
                   ],
                 ),
