@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:neocheckin/models/option.dart';
 
-class Option extends StatefulWidget {
-  final int selected;
-  final List<String> options;
-  final Function(int) stateFunction;
+class OptionDisplay extends StatefulWidget {
+  final Option selected;
+  final List<Option> options;
+  final Function(Option) stateFunction;
 
-  const Option({Key? key, required this.selected, required this.options, required this.stateFunction}) : super(key: key);
+  const OptionDisplay({Key? key, required this.selected, required this.options, required this.stateFunction}) : super(key: key);
 
   @override
-  State<Option> createState() => _OptionState();
+  State<OptionDisplay> createState() => _OptionDisplayState();
 }
 
-class _OptionState extends State<Option> {
+class _OptionDisplayState extends State<OptionDisplay> {
 
-  late int _selected;
-  late List<String> _options;
-  late Function(int) _updateParentState;
+  late Option _selected;
+  late List<Option> _options;
+  late void Function(Option) _updateParentState;
 
-  _updateSelfState(int selected, List<String> options, Function(int) updateParentState) {
+  _updateSelfState(Option selected, List<Option> options, Function(Option) updateParentState) {
     _updateParentState = updateParentState;
     _selected = selected;
     _options = options;
@@ -28,7 +29,7 @@ class _OptionState extends State<Option> {
     _updateSelfState(widget.selected, widget.options, widget.stateFunction);
   }
   @override
-  void didUpdateWidget(Option oldWidget) {
+  void didUpdateWidget(OptionDisplay oldWidget) {
     super.didUpdateWidget(oldWidget);
     _updateSelfState(widget.selected, widget.options, widget.stateFunction);
   }
@@ -38,18 +39,18 @@ class _OptionState extends State<Option> {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: _options.asMap().entries.map((entry) =>
+      children: _options.map((Option option) =>
         Container(margin: const EdgeInsets.symmetric(horizontal: 16),
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              elevation: (entry.key == _selected) ? 8 : 0,
-              primary: (entry.key == _selected) ? colorScheme.primary : colorScheme.primaryVariant,
+              elevation: (option.id == _selected.id) ? 8 : 0,
+              primary: (option.id == _selected.id) ? colorScheme.primary : colorScheme.primaryVariant,
             ),
-            onPressed: () {_updateParentState(entry.key);},
+            onPressed: () {_updateParentState(option);},
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
               child: Text(
-                entry.value,
+                option.name,
                 style: const TextStyle(
                   fontSize: 32,
                 )

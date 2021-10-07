@@ -4,8 +4,8 @@ class Time {
     time = seconds + minutes*60 + hours*60*60;
   }
 
-  void addSeconds(int seconds) {
-    time += seconds;
+  void setSeconds(int seconds) {
+    time = seconds;
   }
 
   int getSeconds() {return time;}
@@ -25,7 +25,7 @@ class Time {
 
   String getFormattedMinutes([ bool? padded = true ]) {
     int absTime = time.abs();
-    int minutes = ((absTime - absTime%60)/60).round();
+    int minutes = ((absTime - absTime%60)/60).round()%60;
     if (padded == true && minutes < 10) {
       return '0' + minutes.toString();
     }
@@ -33,7 +33,7 @@ class Time {
   }
 
   String getFormattedSeconds([ bool? padded = true ]) {
-    int absTime = time.abs();
+    int absTime = time.abs()%60;
     if (padded == true && absTime < 10) {
       return '0' + absTime.toString();
     }

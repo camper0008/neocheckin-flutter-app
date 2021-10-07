@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '/components/cancel_button.dart';
+import 'package:neocheckin/components/cancel_button.dart';
 
 class CancelButtonList extends StatefulWidget {
 
@@ -34,7 +34,8 @@ class _CancelButtonListState extends State<CancelButtonList> {
       child: Padding(
         padding: const EdgeInsets.only(left: 16.0, bottom: 16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: _cancelButtons.map((controller) => 
             Padding(
               padding: const EdgeInsets.only(top: 16),
