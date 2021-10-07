@@ -97,9 +97,12 @@ class _CancelButtonState extends State<CancelButton> {
           style: const TextStyle(fontSize: 24),
         ),
       ),
-      icon: const Icon(
-        Icons.alarm,
-        size: 24,
+      icon: const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 12),
+        child: Icon(
+          Icons.alarm,
+          size: 24,
+        ),
       ),
       style: ElevatedButton.styleFrom(
         primary: Colors.red,
