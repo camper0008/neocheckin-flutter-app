@@ -47,49 +47,33 @@ class _HomePageState extends State<HomePage> {
   Map<String, List<Employee>> _employees = {};
   String _errorMessage = '';
 
-  void _setOption(Option option) {
-    setState(() {
-      _optionSelected = option;
-    });
-  }
-  void _setEmployee(Employee employee) {
-    setState(() {
-      _activeEmployee = employee;
-    });
-  }
-  void _updateOptions() {
-    (() async {
-      Map<String, dynamic> body = await HttpRequest.get('$apiUrl/options/available', _displayError);
-      OptionsAvailableResponse response = OptionsAvailableResponse.fromJson(body);
-      if (response.error == 'none') {
-        bool isIdentical = (_options.length == response.options.length);
-        if (isIdentical) {
-          for (int i = 0; i < _options.length; ++i) {
-            if (_options[i].id != response.options[i].id) {
-              isIdentical = false;
-            }
+  void _setOption(Option option) => setState(() => _optionSelected = option );
+  void _setEmployee(Employee employee) => setState(() => _activeEmployee = employee );
+  void _displayError(String message) => setState(() => _errorMessage = message);
+
+  void _updateOptions() async {
+    Map<String, dynamic> body = await HttpRequest.get('$apiUrl/options/available', _displayError);
+    OptionsAvailableResponse response = OptionsAvailableResponse.fromJson(body);
+    if (response.error == 'none') {
+      bool isIdentical = (_options.length == response.options.length);
+      if (isIdentical) {
+        for (int i = 0; i < _options.length; ++i) {
+          if (_options[i].id != response.options[i].id) {
+            isIdentical = false;
           }
         }
-        if (!isIdentical) {
-          setState(() {
-            _options = response.options;
-          });
-        }
       }
-    })();
+      if (!isIdentical) setState(() => _options = response.options);
+    }
 
     Timer(const Duration(minutes: 1), _updateOptions);
   }
-  void _updateEmployees() {
-    (() async {
-      Map<String, dynamic> body = await HttpRequest.get('$apiUrl/employees/working', _displayError);
-      EmployeesWorkingResponse response = EmployeesWorkingResponse.fromJson(body);
-      if (response.error == 'none') {
-        setState(() {
-          _employees = response.ordered;
-        });
-      }
-    })();
+  void _updateEmployees() async {
+    Map<String, dynamic> body = await HttpRequest.get('$apiUrl/employees/working', _displayError);
+    EmployeesWorkingResponse response = EmployeesWorkingResponse.fromJson(body);
+    if (response.error == 'none') {
+      setState(() => _employees = response.ordered );
+    }
   }
   void _updateCancelButtons(CancelButtonController controller, { bool remove = false }) {
     setState(() {
@@ -98,11 +82,6 @@ class _HomePageState extends State<HomePage> {
       } else {
         _cancelButtons.removeWhere((p) => p == controller);
       }
-    });
-  }
-  void _displayError(String message) {
-    setState(() {
-      _errorMessage = message;
     });
   }
 

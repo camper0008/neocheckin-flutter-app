@@ -43,7 +43,7 @@ class _CancelButtonState extends State<CancelButton> {
   late CancelButtonController _controller;
   Timer _displayTimer = Timer(const Duration(seconds: 0), (){});
 
-  void update(CancelButton widget) {
+  void _updateSelf(CancelButton widget) {
     _controller = widget.controller;
   }
 
@@ -55,9 +55,7 @@ class _CancelButtonState extends State<CancelButton> {
         if (_controller._displayCounter < 1) {
           timer.cancel();
         } else {
-          setState(() {
-            _controller.decreaseCounter();
-          });
+          setState(() => _controller.decreaseCounter());
         }
       }
     );
@@ -66,14 +64,14 @@ class _CancelButtonState extends State<CancelButton> {
   @override
   void initState() {
     super.initState();
-    update(widget);
+    _updateSelf(widget);
     _createDisplayTimer(widget);
   }
 
   @override
   void didUpdateWidget(CancelButton oldWidget) {
     super.didUpdateWidget(oldWidget);
-    update(widget);
+    _updateSelf(widget);
     _displayTimer.cancel();
     _createDisplayTimer(widget);
   }
