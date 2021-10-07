@@ -5,6 +5,7 @@ import 'package:neocheckin/components/cancel_button_list.dart';
 import 'package:neocheckin/components/card_reader_input.dart';
 import 'package:neocheckin/components/option_display.dart';
 import 'package:neocheckin/components/employee_list.dart';
+import 'package:neocheckin/components/constrained_sidebar.dart';
 import 'package:neocheckin/models/option.dart';
 import 'package:neocheckin/responses/employee.dart';
 import 'package:neocheckin/responses/employees_working.dart';
@@ -103,8 +104,7 @@ class _HomePageState extends State<HomePage> {
         onTap: () {_setOption(NullOption());},
         child: Row(
           children: [
-            SizedBox(
-              width: 400,
+            ConstrainedSidebar(
               child: Padding(
                 padding: const EdgeInsets.only(left: 8.0),
                 child: CancelButtonList(
@@ -133,8 +133,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-            SizedBox(
-              width: 400,
+            ConstrainedSidebar(
               child: Padding(
                 padding: const EdgeInsets.only(right: 8),
                 child: EmployeeList(employees: _employees),
