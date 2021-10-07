@@ -27,6 +27,22 @@ class _FlexDisplayState extends State<FlexDisplay> {
     _flexPrefix = isNegative ? '-' : '+';
     _flexColor = isNegative ? Colors.red : Colors.green;
   }
+  Image _getImageFromBase64(String base64) {
+    try {
+      return Image.memory(
+        base64Decode(base64),
+        gaplessPlayback: true,
+        width: 240,
+        height: 320,
+      );
+    } catch(err) {
+      return Image.asset(
+        "assets/images/placeholder.png",
+        width: 240,
+        height: 320,
+      );
+    }
+  }
 
   @override
   void initState() {
@@ -66,13 +82,8 @@ class _FlexDisplayState extends State<FlexDisplay> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.only(right: 40), 
-              child: Image.memory(
-                base64Decode(_employee.photo),
-                gaplessPlayback: true,
-                width: 240,
-                height: 320,
-              ),
+              padding: const EdgeInsets.only(right: 40),
+              child: _getImageFromBase64(_employee.photo)
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
