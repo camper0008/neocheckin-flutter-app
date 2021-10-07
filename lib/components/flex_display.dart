@@ -36,7 +36,10 @@ class _FlexDisplayState extends State<FlexDisplay> {
   }
   @override
   void didUpdateWidget(FlexDisplay oldWidget) {
-    if (oldWidget.employee.name != widget.employee.name) {
+    if (
+      oldWidget.employee.name != widget.employee.name &&
+      oldWidget.employee.working != widget.employee.working
+    ) {
       _resetTimer.cancel();
       _resetTimer = Timer(const Duration(seconds: 5), (){widget.setEmployee(NullEmployee());});
       super.didUpdateWidget(oldWidget);
