@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 
 interface DbInterface {
-    [key: number]: Employee;
+    [rfid: string]: Employee;
 }
 
 interface Employee {
@@ -34,21 +34,21 @@ const options: Option[] = [
 ]
 
 const db: DbInterface = {
-    0: {
+    '0': {
         name: 'testuser0',
         flex: 10000,
         working: false,
         department: 'department0',
         photo: "iVBORw0KGgoAAAANSUhEUgAAAPAAAAFABAMAAABwxuxgAAAAG1BMVEXMzMyWlpa3t7ejo6OcnJyxsbGqqqrFxcW+vr5zfw2IAAAACXBIWXMAAA7EAAAOxAGVKw4bAAACQ0lEQVR4nO3Wv2vbQBTA8WfZ+jH6ItnRaNGhq10C7aijAXe0htLVhkJXqaTxKtMW8mf33ck2yhII3BL6/YAsWSfu6T2d7iQCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD+D+/sB7+3uj3aH88bs7t8JxLd5SuR9PuyDRg3NsbsdZ8Y7dqY4nnflTG5SGPMUqQzZhswcLc4NqXuTxp4mj9t1uPG1Hz7aXf6+8v0svn0Ow8Y+LCX2PV3r4G7rTzcjhsjTfS0TvS3WadFm9qAtd60khZa8VKfcbOT+EbPZaaVzpXB/ZvUU72Zro4XesEqXGA3pjTZ014PNr1kS383azm4mmfvXcazuYafT0t3VbjAX3XTjO9bO2TvH2NXpuZc1cyu4t017/ULPb1evHQ1tUP2hTuT5MlyaJuZhd83e593HTRwVbpUrC+533Q0N9tLYF+CyPQTX/CQcROzckUeB9Y3dzU0pn+NFloONxI8cGa/+NE7LrXMimt7VYv8KXoJXuoqbzVpp78OLp2l/NhKxWcZmY86uwQeXJEr6iWwvk5D4I2fRi/lrdzL7V+ngIEf3ESRHo9Hc5TqPIHoDHJyp89ZprZ3dxh4AqkufdnRlDldJD7zxAXbR/5mgk+ZT+oc+LpIVHXqh7VfHtppqZcEXySse7rnwLosDoPK7qSp3YEuiAt9l9XcLYu3L3T0WmYUWB6N/xCIC7dcuqPo7nMvkyFwegj6IQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAeOP+AQKnUAHQfPjTAAAAAElFTkSuQmCC"
     },
-    1: {
+    '1': {
         name: 'testuser1',
         flex: 20000,
         working: true,
         department: 'department0',
         photo: "iVBORw0KGgoAAAANSUhEUgAAAUAAAADwBAMAAACDA6BYAAAAG1BMVEXMzMyWlpbFxcWxsbGjo6OcnJyqqqq+vr63t7f/2tAOAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAC5UlEQVR4nO3XPY/aQBCA4QUDdpk5bO5Ko3zUsRSlxpGux4qS+rgiSYmLKC0U+d+Z2bXPSwgduIjepzib81g77OfgHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD8l14/5t/9tS6e7Zo95od/hE0/yNeyu2+2l+OuLhX1Sduz63tNpBbJy/O4oz5ehttEtpfjrm4tRSOFc61dH5yb2XVzFqbf44vIoXtlezHu+nbaDUdtucnL6U70vtinzcNZ2Fx7+Z3c+fvaErwQd302nzLZpKFXNNF77c38LKwtLDOfUFZY7IW46/PzTraJXVN5mtqwzbQnnQ2lXo4hicrmX7vy/37QBOO4m5ravNLWZrL3V59oEibbQp5CT6naLmufbL3RBOO429PWQmfIdmGJppaZ5Xuvo/8UErTpN7FxzqTUBOO4m0t3RZl8c11Pli6Mn6pyXRylv/1oqfgefLvU7+FO4m6s9fug0e6ai93YKnC2dPfVKoo82ofd1h6fxN0+wedwt5b9JG5YV3dzNwTakOuw7u3xZNwEbUJp280qTDPXvAqPmtzWQu+nTbn5yud1GndjaRV24Eqn1GnDrRRDWCI2BXWER09Qx852uTeyKvuh6xqeyXBW6OH7bCN8cNEQj5Sg340zf9SeTv5Ehil49MnO8/B4tEUy/WV/bf+o/Fo+3T7W8rKIk1C7TMQrRttmFr4nJrkmsAyf4w14Jy+HWRWWS5/gaBt14jPQU78NKzmLj7CpfO77KJVw5PUJZmMddZlvQ0uB7sw9KQIWcuj+bXv28NK4xYJVx3KX9hteHZVRWmMdu32mXUYv2Tv1WOXWTveW31bFlOFzXIhq/TfvRrGKThQ3asEaSv5yFubWJi7lM00k63aS2j/OhwRHK/mz8KNpHhLcxj+GfO/VYWybsDaGBEf70eTeNcWPl9Vp9X/d/5z0xXQbxl7+TjCKAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAG7hD4habdhDn1dbAAAAAElFTkSuQmCC"
     },
-    2: {
+    '2': {
         name: 'testuser2',
         flex: 30000,
         working: true,
@@ -66,16 +66,16 @@ const server = () => {
     app.use('/', express.static('/home/pieter/Desktop/gitlab/neocheckin/flutter-app/build/web'));
 
     app.get('/api/employee/:id', (req, res) => {
-        const employeeId = parseInt(req.params.id) ?? -1;
+        const employeeId = req.params.id ?? '-1';
         if (db[employeeId]) return res.status(200).json({employee: db[employeeId]});
         
         return res.status(400).json({error: "employee does not exist"});
     });
 
     app.post('/api/employee/cardscanned', (req, res) => {
-        const employeeId = parseInt(req.body.employeeId ?? '-1') ?? -1
+        const employeeId = req.body.employeeId ?? '-1';
 
-        if (employeeId === -1) 
+        if (employeeId === '-1') 
             return res.status(400).json({ error: 'no userid given' });
         if (!db[employeeId]) 
             return res.status(400).json({ error: 'user doesnt exist' });
@@ -102,6 +102,10 @@ const server = () => {
             }
             employeesOrdered[employee.department].push(employee);
             employeesUnordered.push(employee);
+        }
+
+        for (let department in employeesOrdered) {
+            employeesOrdered[department].sort((a, b) => a.name.localeCompare(b.name))
         }
 
         return res.status(200).json({

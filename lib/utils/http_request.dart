@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+const String apiUrl = "http://localhost:8079/api";
+
 class HttpRequest {
   static Future<Map<String, dynamic>> get(String url, void Function(String) displayError) async {
     try {
