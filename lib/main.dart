@@ -107,7 +107,7 @@ class _HomePageState extends State<HomePage> {
             Align(
               alignment: Alignment.centerRight,
               child: Padding(
-                padding: const EdgeInsets.only(right: 64.0),
+                padding: const EdgeInsets.all(16),
                 child: EmployeeList(employees: _employees),
               ),
             ),
@@ -136,7 +136,7 @@ class _HomePageState extends State<HomePage> {
                   _updateCancelButtons(
                     CancelButtonController(
                       action: 'check ' 
-                        + (employee.working ? ('ud' + (_optionSelected.id != -1 ? ' med valg ' + _optionSelected.name : '')) : 'ind') 
+                        + (employee.working ? ('ud' + (_optionSelected.id != -1 ? ' (' + _optionSelected.name.toLowerCase() + ')' : '')) : 'ind') 
                         + ' for ' 
                         + employee.name.split(' ')[0], 
                       callback: () async {
