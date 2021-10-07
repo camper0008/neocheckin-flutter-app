@@ -33,7 +33,7 @@ In case of a status code >= 400 this will be the response instead.
 Parameters:
 ```ts
 {
-    id: number
+    id: string // rfid
 }
 ```
 ### res:
@@ -47,7 +47,7 @@ Parameters:
 ### req:
 ```ts
 {
-    employeeId: number,
+    employeeId: string, // rfid
     checkingIn: boolean
     optionId: number // -1 if no option was selected, so you dont need a "default" option
 }
