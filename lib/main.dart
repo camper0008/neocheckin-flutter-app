@@ -27,7 +27,9 @@ class App extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const HomePage(),
+      home: const Scaffold(
+        body: HomePage()
+      ),
     );
   }
 }
@@ -93,109 +95,106 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: () {_setOption(NullOption());},
-            child: Row(
-              children: [
-                SizedBox(
-                  width: 400,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: CancelButtonList(
-                      cancelButtons: _cancelButtons,
-                      removeCancelButton: (CancelButtonController controller) { _updateCancelButtons(controller, remove: true); },
-                    ),
-                  ),
+  Widget build(BuildContext context) =>
+  Stack(
+    children: [
+      GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () {_setOption(NullOption());},
+        child: Row(
+          children: [
+            SizedBox(
+              width: 400,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: CancelButtonList(
+                  cancelButtons: _cancelButtons,
+                  removeCancelButton: (CancelButtonController controller) { _updateCancelButtons(controller, remove: true); },
                 ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        if (_activeEmployee is! NullEmployee)
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 36), 
-                            child: FlexDisplay(employee: _activeEmployee, setEmployee: _setEmployee),
-                          ),
-                        OptionDisplay(
-                          selected: _optionSelected, 
-                          options: _options, 
-                          stateFunction: _setOption
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 400,
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 8),
-                    child: EmployeeList(employees: _employees),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          CardReaderInput(
-            onSubmitted: (String value) async {
-              Map<String, dynamic> body = await HttpRequest.get('$apiUrl/employee/$value', _displayError);
-              EmployeeResponse response = EmployeeResponse.fromJson(body);
-              Employee employee = response.employee;
-              if (response.error == 'none') {
-                _setEmployee(response.employee);
-                Option optionCache = _optionSelected;
-                _updateCancelButtons(
-                  CancelButtonController(
-                    action: 'check ' 
-                      + (employee.working ? ('ud' + (_optionSelected.id != -1 ? ' (' + _optionSelected.name.toLowerCase() + ')' : '')) : 'ind') 
-                      + ' for ' 
-                      + employee.name.split(' ')[0], 
-                    callback: () async {
-                      Map<String, dynamic> httpReq = {
-                        "employeeId": value,
-                        "optionId": optionCache.id,
-                        "checkingIn": !employee.working, 
-                      };
-                      await HttpRequest.post('$apiUrl/employee/cardscanned', httpReq, _displayError);
-                      _updateEmployees();
-                    },
-                    duration: 5,
-                    unmountCallback: (CancelButtonController controller) { _updateCancelButtons(controller, remove: true); },
-                  )
-                );
-                _setOption(NullOption());
-              }
-            }
-          ),
-          if (_errorMessage != '') 
-          AlertDialog(
-            title: const Text('En fejl opstod:'),
-            content: SingleChildScrollView(
-              child: Text(
-                _errorMessage,
-                style: const TextStyle(fontFamily: 'RobotoMono')
               ),
             ),
-            actions: [
-              TextButton(
-                onPressed: (){_displayError('');}, 
-                child: const Padding(
-                  padding: EdgeInsets.all(8),
-                  child: Text(
-                    'OK', style: TextStyle(fontSize: 20),
-                  ),
-                )
-              )
-            ]
-          ),
-        ],
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    if (_activeEmployee is! NullEmployee)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 36), 
+                        child: FlexDisplay(employee: _activeEmployee, setEmployee: _setEmployee),
+                      ),
+                    OptionDisplay(
+                      selected: _optionSelected, 
+                      options: _options, 
+                      stateFunction: _setOption
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(
+              width: 400,
+              child: Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: EmployeeList(employees: _employees),
+              ),
+            ),
+          ],
+        ),
       ),
-    );
-  }
+      CardReaderInput(
+        onSubmitted: (String value) async {
+          Map<String, dynamic> body = await HttpRequest.get('$apiUrl/employee/$value', _displayError);
+          EmployeeResponse response = EmployeeResponse.fromJson(body);
+          Employee employee = response.employee;
+          if (response.error == 'none') {
+            _setEmployee(response.employee);
+            Option optionCache = _optionSelected;
+            _updateCancelButtons(
+              CancelButtonController(
+                action: 'check ' 
+                  + (employee.working ? ('ud' + (_optionSelected.id != -1 ? ' (' + _optionSelected.name.toLowerCase() + ')' : '')) : 'ind') 
+                  + ' for ' 
+                  + employee.name.split(' ')[0], 
+                callback: () async {
+                  Map<String, dynamic> httpReq = {
+                    "employeeId": value,
+                    "optionId": optionCache.id,
+                    "checkingIn": !employee.working, 
+                  };
+                  await HttpRequest.post('$apiUrl/employee/cardscanned', httpReq, _displayError);
+                  _updateEmployees();
+                },
+                duration: 5,
+                unmountCallback: (CancelButtonController controller) { _updateCancelButtons(controller, remove: true); },
+              )
+            );
+            _setOption(NullOption());
+          }
+        }
+      ),
+      if (_errorMessage != '') 
+      AlertDialog(
+        title: const Text('En fejl opstod:'),
+        content: SingleChildScrollView(
+          child: Text(
+            _errorMessage,
+            style: const TextStyle(fontFamily: 'RobotoMono')
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: (){_displayError('');}, 
+            child: const Padding(
+              padding: EdgeInsets.all(8),
+              child: Text(
+                'OK', style: TextStyle(fontSize: 20),
+              ),
+            )
+          )
+        ]
+      ),
+    ],
+  );
 }
