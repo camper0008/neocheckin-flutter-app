@@ -83,8 +83,8 @@ class _FlexDisplayState extends State<FlexDisplay> {
                     fontSize: (14*2.75),
                   ),
                 ),
-                RichText(
-                  text: TextSpan(
+                Text.rich(
+                  TextSpan(
                     style: const TextStyle(fontSize: (14*2.25)),
                     children: <TextSpan>[
                       const TextSpan(
