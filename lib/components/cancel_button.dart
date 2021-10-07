@@ -94,11 +94,11 @@ class _CancelButtonState extends State<CancelButton> {
         padding: const EdgeInsets.symmetric(vertical: 16),
         child: Text(
           'Annuller ' + _controller.action + '? [' + _controller.getDisplayString() + ']',
-          style: const TextStyle(fontSize: 24),
+          style: const TextStyle(fontSize: 20),
         ),
       ),
       icon: const Padding(
-        padding: EdgeInsets.symmetric(horizontal: 12),
+        padding: EdgeInsets.symmetric(horizontal: 8),
         child: Icon(
           Icons.alarm,
           size: 24,

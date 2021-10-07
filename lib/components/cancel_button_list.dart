@@ -37,6 +37,7 @@ class _CancelButtonListState extends State<CancelButtonList> {
       children: [
         SingleChildScrollView(
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: _cancelButtons.map((controller) => 
               Padding(
                 padding: const EdgeInsets.only(top: 16),
