@@ -104,6 +104,10 @@ const server = () => {
             employeesUnordered.push(employee);
         }
 
+        for (let department in employeesOrdered) {
+            employeesOrdered[department].sort((a, b) => a.name.localeCompare(b.name))
+        }
+
         return res.status(200).json({
             employees: employeesUnordered, 
             ordered: employeesOrdered, 
