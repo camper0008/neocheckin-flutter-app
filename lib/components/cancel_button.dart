@@ -7,7 +7,7 @@ class CancelButtonController {
   final void Function() callback;
   final void Function(CancelButtonController) unmountCallback;
   late final Timer _callbackTimer;
-  late int _displayCounter;
+  late Stopwatch _stopwatch;
 
   CancelButtonController({required this.duration, required this.action, required this.callback, required this.unmountCallback}) {
     _callbackTimer = Timer(
@@ -17,17 +17,10 @@ class CancelButtonController {
         unmountCallback(this);
       }
     );
-
-    _displayCounter = duration;
+    _stopwatch = Stopwatch()..start();
   }
 
-  void decreaseCounter() {
-    _displayCounter--;
-  }
-
-  String getDisplayString() {
-    return _displayCounter.toString();
-  }
+  int getSecondsLeft() => duration - _stopwatch.elapsed.inSeconds;
 }
 
 class CancelButton extends StatefulWidget {
@@ -41,22 +34,20 @@ class CancelButton extends StatefulWidget {
 
 class _CancelButtonState extends State<CancelButton> {
   late CancelButtonController _controller;
+  late int _secondsLeft;
   Timer _displayTimer = Timer(const Duration(seconds: 0), (){});
 
   void _updateSelf(CancelButton widget) {
     _controller = widget.controller;
+    _secondsLeft = _controller.getSecondsLeft();
   }
 
   void _createDisplayTimer(CancelButton widget) {
     _displayTimer = Timer.periodic(
       const Duration(seconds: 1), 
       (timer) {
-        if (!mounted) { timer.cancel(); return;}
-        if (_controller._displayCounter < 1) {
-          timer.cancel();
-        } else {
-          setState(() => _controller.decreaseCounter());
-        }
+        if (!mounted) { timer.cancel(); return; }
+        setState(() => _secondsLeft = _controller.getSecondsLeft());
       }
     );
   }
@@ -72,8 +63,6 @@ class _CancelButtonState extends State<CancelButton> {
   void didUpdateWidget(CancelButton oldWidget) {
     super.didUpdateWidget(oldWidget);
     _updateSelf(widget);
-    _displayTimer.cancel();
-    _createDisplayTimer(widget);
   }
 
   @override
@@ -93,13 +82,16 @@ class _CancelButtonState extends State<CancelButton> {
       label: Padding(
         padding: const EdgeInsets.symmetric(vertical: 16),
         child: Text(
-          'Annuller ' + _controller.action + '? [' + _controller.getDisplayString() + ']',
-          style: const TextStyle(fontSize: 24),
+          'Annuller ' + _controller.action + '? [$_secondsLeft]',
+          style: const TextStyle(fontSize: 20),
         ),
       ),
-      icon: const Icon(
-        Icons.alarm,
-        size: 24,
+      icon: const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 8),
+        child: Icon(
+          Icons.alarm,
+          size: 24,
+        ),
       ),
       style: ElevatedButton.styleFrom(
         primary: Colors.red,

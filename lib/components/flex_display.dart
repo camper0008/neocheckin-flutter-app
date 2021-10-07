@@ -36,7 +36,10 @@ class _FlexDisplayState extends State<FlexDisplay> {
   }
   @override
   void didUpdateWidget(FlexDisplay oldWidget) {
-    if (oldWidget.employee.name != widget.employee.name) {
+    if (
+      oldWidget.employee.name != widget.employee.name &&
+      oldWidget.employee.working != widget.employee.working
+    ) {
       _resetTimer.cancel();
       _resetTimer = Timer(const Duration(seconds: 5), (){widget.setEmployee(NullEmployee());});
       super.didUpdateWidget(oldWidget);
@@ -46,74 +49,72 @@ class _FlexDisplayState extends State<FlexDisplay> {
 
   @override
   Widget build(BuildContext build) {
-    return Visibility(
-      visible: (_employee is! NullEmployee),
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 36),
-            child: Text(
-              (_employee.working ? 'Du er nu checket ud' : 'Du er nu checket ind'),
-              style: const TextStyle(
-                fontSize: (14*3),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 36),
+          child: Text(
+            (_employee.working ? 'Du er nu checket ud' : 'Du er nu checket ind'),
+            style: const TextStyle(
+              fontSize: (14*3),
+            ),
+          )
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 40), 
+              child: Image.memory(
+                base64Decode(_employee.photo),
+                gaplessPlayback: true,
+                width: 240,
+                height: 320,
               ),
-            )
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 40), 
-                child: Image.memory(
-                  base64Decode(_employee.photo),
-                  gaplessPlayback: true,
-                  width: 240,
-                  height: 320,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  _employee.name,
+                  style: const TextStyle(
+                    fontSize: (14*2.75),
+                  ),
                 ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    _employee.name,
-                    style: const TextStyle(
-                      fontSize: (14*2.75),
-                    ),
+                Text.rich(
+                  TextSpan(
+                    style: const TextStyle(fontSize: (14*2.25)),
+                    children: <TextSpan>[
+                      const TextSpan(
+                        text: 'Flex: '
+                      ),
+                      TextSpan(
+                        text: _flexPrefix + _employee.flex.getFormattedHours(),
+                        style: TextStyle(
+                          color: _flexColor,
+                          fontFamily: 'RobotoMono',
+                        ),
+                      ),
+                      const TextSpan(
+                        text: ':',
+                      ),
+                      TextSpan(
+                        text: _employee.flex.getFormattedMinutes(), 
+                        style: TextStyle(
+                          color: _flexColor,
+                          fontFamily: 'RobotoMono',
+                        ),
+                      ),
+                    ],
                   ),
-                  RichText(
-                    text: TextSpan(
-                      style: const TextStyle(fontSize: (14*2.25)),
-                      children: <TextSpan>[
-                        const TextSpan(
-                          text: 'Flex: '
-                        ),
-                        TextSpan(
-                          text: _flexPrefix + _employee.flex.getFormattedHours(),
-                          style: TextStyle(
-                            color: _flexColor,
-                            fontFamily: 'RobotoMono',
-                          ),
-                        ),
-                        const TextSpan(
-                          text: ':',
-                        ),
-                        TextSpan(
-                          text: _employee.flex.getFormattedMinutes(), 
-                          style: TextStyle(
-                            color: _flexColor,
-                            fontFamily: 'RobotoMono',
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
-      ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

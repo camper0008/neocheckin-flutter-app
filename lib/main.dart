@@ -5,6 +5,7 @@ import 'package:neocheckin/components/cancel_button_list.dart';
 import 'package:neocheckin/components/card_reader_input.dart';
 import 'package:neocheckin/components/option_display.dart';
 import 'package:neocheckin/components/employee_list.dart';
+import 'package:neocheckin/components/constrained_sidebar.dart';
 import 'package:neocheckin/models/option.dart';
 import 'package:neocheckin/responses/employee.dart';
 import 'package:neocheckin/responses/employees_working.dart';
@@ -27,7 +28,14 @@ class App extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const HomePage(),
+      home: const DefaultTextStyle(
+        style: TextStyle(
+          fontFamily: 'Roboto',
+        ),
+        child: Scaffold(
+          body: HomePage()
+        ),
+      ),
     );
   }
 }
@@ -93,92 +101,110 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: GestureDetector(
+  Widget build(BuildContext context) =>
+  Stack(
+    children: [
+      GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () {_setOption(NullOption());},
-        child: Stack(
+        child: Row(
           children: [
-            CancelButtonList(
-              cancelButtons: _cancelButtons,
-              removeCancelButton: (CancelButtonController controller) { _updateCancelButtons(controller, remove: true); },
-            ),
-            Align(
-              alignment: Alignment.centerRight,
+            ConstrainedSidebar(
               child: Padding(
-                padding: const EdgeInsets.only(right: 64.0),
+                padding: const EdgeInsets.only(left: 16.0),
+                child: CancelButtonList(
+                  cancelButtons: _cancelButtons,
+                  removeCancelButton: (CancelButtonController controller) { _updateCancelButtons(controller, remove: true); },
+                ),
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    if (_activeEmployee is! NullEmployee)
+                      Expanded(
+                        child: FlexDisplay(employee: _activeEmployee, setEmployee: _setEmployee),
+                      ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 16, top: 8),
+                      child: OptionDisplay(
+                        selected: _optionSelected, 
+                        options: _options, 
+                        stateFunction: _setOption
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            ConstrainedSidebar(
+              child: Padding(
+                padding: const EdgeInsets.only(right: 16),
                 child: EmployeeList(employees: _employees),
               ),
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 36), 
-                  child: FlexDisplay(employee: _activeEmployee, setEmployee: _setEmployee),
-                ),
-                OptionDisplay(
-                  selected: _optionSelected, 
-                  options: _options, 
-                  stateFunction: _setOption
-                ),
-              ],
-            ),
-            CardReaderInput(
-              onSubmitted: (String value) async {
-                Map<String, dynamic> body = await HttpRequest.get('$apiUrl/employee/$value', _displayError);
-                EmployeeResponse response = EmployeeResponse.fromJson(body);
-                Employee employee = response.employee;
-                if (response.error == 'none') {
-                  _setEmployee(response.employee);
-                  Option optionCache = _optionSelected;
-                  _updateCancelButtons(
-                    CancelButtonController(
-                      action: 'check ' 
-                        + (employee.working ? ('ud' + (_optionSelected.id != -1 ? ' med valg ' + _optionSelected.name : '')) : 'ind') 
-                        + ' for ' 
-                        + employee.name.split(' ')[0], 
-                      callback: () async {
-                        Map<String, dynamic> httpReq = {
-                          "employeeId": value,
-                          "optionId": optionCache.id,
-                          "checkingIn": !employee.working, 
-                        };
-                        await HttpRequest.post('$apiUrl/employee/cardscanned', httpReq, _displayError);
-                        _updateEmployees();
-                      },
-                      duration: 5,
-                      unmountCallback: (CancelButtonController controller) { _updateCancelButtons(controller, remove: true); },
-                    )
-                  );
-                  _setOption(NullOption());
-                }
-              }
-            ),
-            if (_errorMessage != '') AlertDialog(
-              title: const Text('En fejl opstod:'),
-              content: SingleChildScrollView(
-                child: Text(
-                  _errorMessage,
-                  style: const TextStyle(fontFamily: 'RobotoMono')
-                ),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: (){_displayError('');}, 
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                    child: Text(
-                      'OK', style: TextStyle(fontSize: 20),
-                    ),
-                  )
-                )
-              ],
             ),
           ],
         ),
       ),
-    );
-  }
+      CardReaderInput(
+        onSubmitted: (String value) async {
+          Map<String, dynamic> body = await HttpRequest.get('$apiUrl/employee/$value', _displayError);
+          EmployeeResponse response = EmployeeResponse.fromJson(body);
+          Employee employee = response.employee;
+          if (response.error == 'none') {
+            _setEmployee(response.employee);
+            Option optionCache = _optionSelected;
+            _updateCancelButtons(
+              CancelButtonController(
+                duration: 5,
+
+                action: 'check ' 
+                  + (employee.working ? ('ud' + (_optionSelected.id != -1 ? ' (' + _optionSelected.name.toLowerCase() + ')' : '')) : 'ind') 
+                  + ' for ' 
+                  + employee.name.split(' ')[0], 
+
+                callback: () async {
+                  Map<String, dynamic> httpReq = {
+                    "employeeId": value,
+                    "optionId": optionCache.id,
+                    "checkingIn": !employee.working, 
+                  };
+                  await HttpRequest.post('$apiUrl/employee/cardscanned', httpReq, _displayError);
+                  _updateEmployees();
+                },
+
+                unmountCallback: (CancelButtonController controller) { _updateCancelButtons(controller, remove: true); },
+
+              )
+            );
+            _setOption(NullOption());
+          }
+        }
+      ),
+      if (_errorMessage != '') 
+      AlertDialog(
+        title: const Text('En fejl opstod:'),
+        content: SingleChildScrollView(
+          child: Text(
+            _errorMessage,
+            style: const TextStyle(fontFamily: 'RobotoMono')
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: (){_displayError('');}, 
+            child: const Padding(
+              padding: EdgeInsets.all(8),
+              child: Text(
+                'OK', style: TextStyle(fontSize: 20),
+              ),
+            )
+          )
+        ]
+      ),
+    ],
+  );
 }

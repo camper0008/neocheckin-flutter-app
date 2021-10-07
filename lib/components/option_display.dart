@@ -37,27 +37,28 @@ class _OptionDisplayState extends State<OptionDisplay> {
   @override
   Widget build(BuildContext context) {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Wrap(
+      direction: Axis.horizontal,
+      alignment: WrapAlignment.center,
+      spacing: 8.0,
+      runSpacing: 8.0,
       children: _options.map((Option option) =>
-        Container(margin: const EdgeInsets.symmetric(horizontal: 16),
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              elevation: (option.id == _selected.id) ? 8 : 0,
-              primary: (option.id == _selected.id) ? colorScheme.primary : colorScheme.primaryVariant,
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            elevation: (option.id == _selected.id) ? 8 : 0,
+            primary: (option.id == _selected.id) ? colorScheme.primary : colorScheme.primaryVariant,
+          ),
+          onPressed: () {_updateParentState(option);},
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+            child: Text(
+              option.name,
+              style: const TextStyle(
+                fontSize: 32,
+              )
             ),
-            onPressed: () {_updateParentState(option);},
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-              child: Text(
-                option.name,
-                style: const TextStyle(
-                  fontSize: 32,
-                )
-              ),
-            ),
-          )
-        ),
+          ),
+        )
       ).toList()
     );
   }
