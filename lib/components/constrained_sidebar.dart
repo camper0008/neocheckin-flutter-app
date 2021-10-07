@@ -9,7 +9,7 @@ class ConstrainedSidebar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) =>
-    ConstrainedBox(
+  ConstrainedBox(
     constraints: const BoxConstraints(
       minWidth: 400,
     ),
