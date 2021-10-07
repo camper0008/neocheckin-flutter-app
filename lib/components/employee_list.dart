@@ -32,6 +32,7 @@ class _EmployeeListState extends State<EmployeeList> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      controller: ScrollController(),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: _employees.entries.map((department) => 

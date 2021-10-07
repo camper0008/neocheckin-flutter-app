@@ -29,26 +29,27 @@ class _CancelButtonListState extends State<CancelButtonList> {
 
   @override
   Widget build(BuildContext build) =>
-  Padding(
-    padding: const EdgeInsets.symmetric(vertical: 8.0),
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: _cancelButtons.map((controller) => 
-              Padding(
-                padding: const EdgeInsets.only(top: 16),
-                child: CancelButton(
-                  controller: controller,
-                ),
-              )
-            ).toList()
-          ),
+  Align(
+    alignment: Alignment.bottomLeft,
+    child: Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16.0),
+      child: SingleChildScrollView(
+        controller: ScrollController(),
+        reverse: true,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: _cancelButtons.map((controller) => 
+            Padding(
+              padding: const EdgeInsets.only(top: 16.0),
+              child: CancelButton(
+                controller: controller,
+              ),
+            )
+          ).toList()
         ),
-      ]
+      ),
     ),
   );
 }
