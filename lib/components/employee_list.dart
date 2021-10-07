@@ -41,14 +41,16 @@ class _EmployeeListState extends State<EmployeeList> {
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 child: Text(
                   department.key,
+                  textAlign: TextAlign.center,
                   style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
                 ),
               ),
-              ...department.value.asMap().entries.map((entry) => 
+              ...department.value.map((employee) => 
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4),
                   child: Text(
-                    entry.value.name,
+                    employee.name,
+                    textAlign: TextAlign.center,
                     style: const TextStyle(fontSize: 28),
                   ),
                 ),
