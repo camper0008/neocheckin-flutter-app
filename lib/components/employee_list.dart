@@ -31,30 +31,32 @@ class _EmployeeListState extends State<EmployeeList> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: _employees.entries.map((department) => 
-        Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Text(
-                department.key,
-                style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-              ),
-            ),
-            ...department.value.asMap().entries.map((entry) => 
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: _employees.entries.map((department) => 
+          Column(
+            children: [
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
+                padding: const EdgeInsets.symmetric(vertical: 8),
                 child: Text(
-                  entry.value.name,
-                  style: const TextStyle(fontSize: 28),
+                  department.key,
+                  style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
                 ),
               ),
-            ).toList()
-          ]
-        )
-      ).toList()
+              ...department.value.asMap().entries.map((entry) => 
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: Text(
+                    entry.value.name,
+                    style: const TextStyle(fontSize: 28),
+                  ),
+                ),
+              ).toList()
+            ]
+          )
+        ).toList()
+      ),
     );
   }
 }
