@@ -14,7 +14,11 @@ class HttpRequest {
         },
       );
       if (response.statusCode < 400) {
-        return json.decode(response.body);
+        Map<String, dynamic> decoded = json.decode(response.body);
+        if (decoded['error']) {
+          throw Exception(decoded['error']);
+        }
+        return decoded;
       } else {
         Map<String, dynamic> decoded = json.decode(response.body);
         throw Exception('GET \'$url\' failed: ' + decoded['error'].toString());
@@ -36,7 +40,11 @@ class HttpRequest {
         body: json.encode(body),
       );
       if (response.statusCode < 400) {
-        return json.decode(response.body);
+        Map<String, dynamic> decoded = json.decode(response.body);
+        if (decoded['error']) {
+          throw Exception(decoded['error']);
+        }
+        return decoded;
       } else {
         Map<String, dynamic> decoded = json.decode(response.body);
         throw Exception('POST \'$url\' failed: ' + decoded['error'].toString());
