@@ -150,8 +150,8 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       CardReaderInput(
-        onSubmitted: (String value) async {
-          Map<String, dynamic> body = await HttpRequest.get('$apiUrl/employee/$value', _displayError);
+        onSubmitted: (String rfid) async {
+          Map<String, dynamic> body = await HttpRequest.get('$apiUrl/employee/$rfid', _displayError);
           EmployeeResponse response = EmployeeResponse.fromJson(body);
           Employee employee = response.employee;
           if (response.error == 'none') {
@@ -168,7 +168,7 @@ class _HomePageState extends State<HomePage> {
 
                 callback: () async {
                   Map<String, dynamic> httpReq = {
-                    "employeeId": value,
+                    "employeeRfid": rfid,
                     "optionId": optionCache.id,
                     "checkingIn": !employee.working, 
                   };

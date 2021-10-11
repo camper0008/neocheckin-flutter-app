@@ -28,12 +28,12 @@ In case of a status code >= 400 this will be the response instead.
 }
 ```
 
-## GET `/api/employee/:id`
+## GET `/api/employee/:rfid`
 ### req:
 Parameters:
 ```ts
 {
-    id: string // rfid
+    rfid: string
 }
 ```
 ### res:
@@ -47,7 +47,7 @@ Parameters:
 ### req:
 ```ts
 {
-    employeeId: string, // rfid
+    employeeRfid: string,
     checkingIn: boolean
     optionId: number // -1 if no option was selected, so you dont need a "default" option
 }

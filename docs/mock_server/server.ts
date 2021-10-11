@@ -76,26 +76,26 @@ const server = () => {
     })
     app.use('/', express.static('/home/pieter/Desktop/gitlab/neocheckin/flutter-app/build/web'));
 
-    app.get('/api/employee/:id', (req, res) => {
-        const employeeId = req.params.id ?? '-1';
+    app.get('/api/employee/:rfid', (req, res) => {
+        const employeeId = req.params.rfid ?? '-1';
         if (db[employeeId]) return res.status(200).json({employee: db[employeeId]});
         
         return res.status(400).json({error: "employee does not exist"});
     });
 
     app.post('/api/employee/cardscanned', (req, res) => {
-        const employeeId = req.body.employeeId ?? '-1';
+        const employeeRfid = req.body.employeeRfid ?? '-1';
 
-        if (employeeId === '-1') 
-            return res.status(400).json({ error: 'no userid given' });
-        if (!db[employeeId]) 
+        if (employeeRfid === '-1') 
+            return res.status(400).json({ error: 'no rfid given' });
+        if (!db[employeeRfid]) 
             return res.status(400).json({ error: 'user doesnt exist' });
         if (req.body.checkingIn === null || req.body.checkingIn === undefined) 
             return res.status(400).json({ error: 'checkingIn not given' })
 
-        db[employeeId].working = req.body.checkingIn;
+        db[employeeRfid].working = req.body.checkingIn;
         
-        return res.status(200).json({ employee: db[employeeId] });
+        return res.status(200).json({ employee: db[employeeRfid] });
     });
 
     app.get('/api/employees/working', (req, res) => {
