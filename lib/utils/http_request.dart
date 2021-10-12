@@ -15,7 +15,7 @@ class HttpRequest {
       );
       if (response.statusCode < 400) {
         Map<String, dynamic> decoded = json.decode(response.body);
-        if (decoded['error'].runtimeType == null.runtimeType) {
+        if (decoded['error'].runtimeType != null.runtimeType) {
           throw Exception(decoded['error']);
         }
         return decoded;
@@ -24,7 +24,6 @@ class HttpRequest {
         throw Exception('GET \'$url\' failed: ' + decoded['error'].toString());
       }
     } catch(err) {
-      print(err);
       displayError(err.toString());
       return json.decode("{ \"error\": \"$err\" }");
     }
@@ -42,7 +41,7 @@ class HttpRequest {
       );
       if (response.statusCode < 400) {
         Map<String, dynamic> decoded = json.decode(response.body);
-        if (decoded['error'].runtimeType == null.runtimeType) {
+        if (decoded['error'].runtimeType != null.runtimeType) {
           throw Exception(decoded['error']);
         }
         return decoded;
@@ -51,7 +50,6 @@ class HttpRequest {
         throw Exception('POST \'$url\' failed: ' + decoded['error'].toString());
       }
     } catch(err) {
-      print(err);
       displayError(err.toString());
       return json.decode("{ \"error\": \"$err\" }");
     }
