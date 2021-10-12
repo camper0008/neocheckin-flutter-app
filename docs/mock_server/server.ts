@@ -1,5 +1,7 @@
 import express from "express";
 import cors from "cors";
+import { readFile } from "fs/promises"
+import { join } from "path";
 
 interface DbInterface {
     [rfid: string]: Employee;
@@ -39,7 +41,7 @@ const db: DbInterface = {
         flex: 10000,
         working: false,
         department: 'department0',
-        photo: "iVBORw0KGgoAAAANSUhEUgAAAPAAAAFABAMAAABwxuxgAAAAG1BMVEXMzMyWlpa3t7ejo6OcnJyxsbGqqqrFxcW+vr5zfw2IAAAACXBIWXMAAA7EAAAOxAGVKw4bAAACQ0lEQVR4nO3Wv2vbQBTA8WfZ+jH6ItnRaNGhq10C7aijAXe0htLVhkJXqaTxKtMW8mf33ck2yhII3BL6/YAsWSfu6T2d7iQCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD+D+/sB7+3uj3aH88bs7t8JxLd5SuR9PuyDRg3NsbsdZ8Y7dqY4nnflTG5SGPMUqQzZhswcLc4NqXuTxp4mj9t1uPG1Hz7aXf6+8v0svn0Ow8Y+LCX2PV3r4G7rTzcjhsjTfS0TvS3WadFm9qAtd60khZa8VKfcbOT+EbPZaaVzpXB/ZvUU72Zro4XesEqXGA3pjTZ014PNr1kS383azm4mmfvXcazuYafT0t3VbjAX3XTjO9bO2TvH2NXpuZc1cyu4t017/ULPb1evHQ1tUP2hTuT5MlyaJuZhd83e593HTRwVbpUrC+533Q0N9tLYF+CyPQTX/CQcROzckUeB9Y3dzU0pn+NFloONxI8cGa/+NE7LrXMimt7VYv8KXoJXuoqbzVpp78OLp2l/NhKxWcZmY86uwQeXJEr6iWwvk5D4I2fRi/lrdzL7V+ngIEf3ESRHo9Hc5TqPIHoDHJyp89ZprZ3dxh4AqkufdnRlDldJD7zxAXbR/5mgk+ZT+oc+LpIVHXqh7VfHtppqZcEXySse7rnwLosDoPK7qSp3YEuiAt9l9XcLYu3L3T0WmYUWB6N/xCIC7dcuqPo7nMvkyFwegj6IQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAeOP+AQKnUAHQfPjTAAAAAElFTkSuQmCC"
+        photo: ''
     },
     '1': {
         name: 'testuser1',
@@ -57,15 +59,14 @@ const db: DbInterface = {
     },
 };
 
-for (let i = 1; i < 40; ++i) {
-    db[i + 20] = {
-        name: 'overflow overflow overflow',
-        flex: 0,
-        working: true,
-        department: 'overflow overflow overflow',
-        photo: "iVBORw0KGgoAAAANSUhEUgAAAfQAAAH0BAMAAAA5+MK5AAAAG1BMVEXMzMyWlpacnJy3t7fFxcW+vr6xsbGqqqqjo6PhoLtdAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAD6klEQVR4nO3aTW8aRxgAYIwXzDHjJnGOoV/K0T5U6hF6yDlUzT1Uldpj6S8IrdTf3flY8DZNvSwWZg7PczCz4Fea0cy+87E7GgEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8Bnfz9/c7sqXf17/9ZTR5/VDCOH6XSk383jxzdNFP7lxKL5IF5NcfFF+WeWLdyeMPrOLbuWXpbxI5aaUn58w+syW3cpvS/ljKs9K+dUJo8+sW/nLEF4u3rZj9i6EX5p1z5h9XPSZrcKXWcpIs1zVVemrbWrDpO3E00Sf2V25N7NleBn/TvPtGm/WD/Fi/fDt+rjoM1uHbvl1+pinak/DdSqPc3tOFH1mm04m2uauim34mIZvrvX04Uz1uOgz297cl9uJaRmepWkrj9U4ck8XfWbz+yE5KaM0DtMXKV29Lr/vk/S4zdfr3aplUHSFypScXYbSh1fpu7vwe77YhN2qvM3XTTdtHx5dn6bThdM2KeXPdblz95+jdsKKTbvP6kOiqzMJzyd/XP+9SOWrtg9z/+36a9d/o92UvQw3R0VX5zI828TVWG7NrO3DSWritr1LV/fDO/b3bWrV86OiqzMNb/JK9OtRSlClUU1KWPN2WC/bhJW/j+V2sTI8ujpX7SL8enFA5ddxTM/aRD48ujbtDiuke3KcZuTRvvLlH7qVH8cfVp2kPiy6NnGyvvmp+Tnvty7ayo/SQmS3GNl/Ocp7s9tt9+4dFF2bi3yi1GxTbuqv/Dx89a996LDoyixLXp6lybq/8qtdOj8qujJvf80TcJPmrf67dfbJmdOw6EptY6bqz9Hp4PHD0dGVuot1PKDymzyPHRtdp1THA9Zj6+6sPji6TmmX3b8Kb/5nwB8WXamUivv3XlftovW46EqlIdu/406T2+dO2w6Lrkvz/n0ppGOV/nOWbdquLI6Nrsv+8Cx3U9/pWpzbvgudu3dYdG1269J8nNp3pjqOF5vOwcyw6NrMS30nuRF9J+l3sdnLbmsGRdemfT4yzlXte34yjx161d2/DIquzSq8WuS9V6p2z1Ozafo5H9UcE12duOP+Nu+4U/dMus9KV/95VlrG+rpzVjEkujqXu3OWPP8+/IS8ZLhlZy07JLo+m1LHshx58L2I9tnDtLuWPTy6QrP94dqo522YWXsx7zTo8OgabXZvRSQ/hvt3oCafvAPVJrA4xd0cEV2j5rd55wW3oW++PS4aAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKJ/ANlf1wmZYXVYAAAAAElFTkSuQmCC"
-    }
+const generate = async () => {
+    const base64 = (await readFile(join(__dirname, '/img.base64'))).toString()
+    db['0'].photo = base64
+    db['1'].photo = base64
+    db['2'].photo = base64
 }
+
+generate()
 
 const server = () => {
     const app = express();
@@ -132,7 +133,7 @@ const server = () => {
         });
     });
 
-    app.listen(8079, () => {
+    app.listen(6000, () => {
         console.log('server started')
     })
 }
