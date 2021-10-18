@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class AlertDisplay extends StatelessWidget {
 
   final void Function() callback;
-  final String title;
+  final Text title;
   final Text message;
   
   const AlertDisplay({Key? key, required this.title, required this.message, required this.callback}) : super(key: key);
@@ -11,7 +11,7 @@ class AlertDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
   AlertDialog(
-    title: Text(title),
+    title: title,
     content: SingleChildScrollView(
       child: message
     ),
