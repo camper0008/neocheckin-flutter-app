@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:neocheckin/components/cancel_button.dart';
 import 'package:neocheckin/components/cancel_button_list.dart';
 import 'package:neocheckin/components/card_reader_input.dart';
+import 'package:neocheckin/components/alert_display.dart';
 import 'package:neocheckin/components/option_display.dart';
 import 'package:neocheckin/components/employee_list.dart';
 import 'package:neocheckin/components/constrained_sidebar.dart';
@@ -11,7 +12,7 @@ import 'package:neocheckin/responses/employee.dart';
 import 'package:neocheckin/responses/employees_working.dart';
 import 'package:neocheckin/components/flex_display.dart';
 import 'package:neocheckin/models/employee.dart';
-import 'package:neocheckin/responses/options_available.dart';
+import 'package:neocheckin/responses/options.dart';
 import 'package:neocheckin/utils/http_request.dart';
 
 void main() {
@@ -60,8 +61,8 @@ class _HomePageState extends State<HomePage> {
   void _displayError(String message) => setState(() => _errorMessage = message);
 
   void _updateOptions() async {
-    Map<String, dynamic> body = await HttpRequest.get('$apiUrl/options/available', _displayError);
-    OptionsAvailableResponse response = OptionsAvailableResponse.fromJson(body);
+    Map<String, dynamic> body = await HttpRequest.get('$apiUrl/options', _displayError);
+    OptionsResponse response = OptionsResponse.fromJson(body);
     if (response.error == 'none') {
       bool isIdentical = (_options.length == response.options.length);
       if (isIdentical) {
@@ -185,25 +186,13 @@ class _HomePageState extends State<HomePage> {
         }
       ),
       if (_errorMessage != '') 
-      AlertDialog(
-        title: const Text('En fejl opstod:'),
-        content: SingleChildScrollView(
-          child: Text(
-            _errorMessage,
-            style: const TextStyle(fontFamily: 'RobotoMono')
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: (){_displayError('');}, 
-            child: const Padding(
-              padding: EdgeInsets.all(8),
-              child: Text(
-                'OK', style: TextStyle(fontSize: 20),
-              ),
-            )
-          )
-        ]
+      AlertDisplay(
+        title: "En fejl opstod:",
+        message: Text(
+          _errorMessage,
+          style: const TextStyle(fontFamily: 'RobotoMono')
+        ), 
+        callback: (){_errorMessage = '';}
       ),
     ],
   );
