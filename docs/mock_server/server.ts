@@ -1,3 +1,6 @@
+// written after docs
+// https://gitlab.pcvdata.dk/super-team-euxtra/neocheckin/docs
+
 import express from "express";
 import cors from "cors";
 import { readFile } from "fs/promises"
@@ -18,20 +21,36 @@ interface Employee {
 interface Option {
     id: number;
     name: string;
+    available: OptionAvailable;
 }
+
+enum OptionAvailable {
+    NOT_AVAILABLE = 0,
+    AVAILABLE     = 1,
+    PRIORITY      = 2,
+}
+
 
 const options: Option[] = [
     {
         id: 0,
-        name: 'Gåtur'
+        name: 'Gåtur',
+        available: OptionAvailable.AVAILABLE,
     },
     {
         id: 1,
-        name: 'Efter aftale'
+        name: 'Gåtur',
+        available: OptionAvailable.AVAILABLE,
     },
     {
         id: 2,
-        name: 'Biblioteksvagt'
+        name: 'Efter aftale',
+        available: OptionAvailable.PRIORITY,
+    },
+    {
+        id: 3,
+        name: 'Biblioteksvagt',
+        available: OptionAvailable.NOT_AVAILABLE,
     }
 ]
 
@@ -126,7 +145,7 @@ const server = () => {
         });
     });
 
-    app.get('/api/options/available', (req, res) => {
+    app.get('/api/options', (req, res) => {
 
         return res.status(200).json({
             options: options, 
