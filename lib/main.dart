@@ -132,6 +132,7 @@ class _HomePageState extends State<HomePage> {
       ),
       CardReaderInput(
         onSubmitted: (String rfid) {
+          // ¯\_(ツ)_/¯
           cardReaderSubmit(
             rfid: rfid, 
             optionSelected: _optionSelected, 
