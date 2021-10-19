@@ -1,16 +1,9 @@
 # neocheckin
 
-A new Flutter project.
+Frontend til det nye checkin system, skrevet i Dart og Flutter.
 
-## Getting Started
+Formålet med frontenden er at kunne bruge den på en Raspberry Pi, så du hjælper digselv ved at teste i Linux frem for Chromium.
 
-This project is a starting point for a Flutter application.
+Husk at ændre `apiUrl` konstanten i filen `/lib/utils/http_request.dart`, hvis du skal udvikle på appen.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+**Husk, at hvis du kører Flutter på alting andet end en Chromium webapp, kan du få problemer ved at bruge `localhost` eller `127.0.0.1` som api url, da Flutter kørt som Android eller Linux app kører i en VM, så deres definition af `localhost` er virtuelmaskinen, og ikke din computer. Hvis du får problemer ved at bruge `localhost`, så brug i stedet din ip addresse på netværket.**
