@@ -1,3 +1,6 @@
+// written after docs 18/10-21
+// https://gitlab.pcvdata.dk/super-team-euxtra/neocheckin/docs
+
 import express from "express";
 import cors from "cors";
 import { readFile } from "fs/promises"
@@ -18,21 +21,37 @@ interface Employee {
 interface Option {
     id: number;
     name: string;
+    available: OptionAvailable;
 }
+
+enum OptionAvailable {
+    NOT_AVAILABLE = 0,
+    AVAILABLE     = 1,
+    PRIORITY      = 2,
+}
+
 
 const options: Option[] = [
     {
         id: 0,
-        name: 'Gåtur'
+        name: 'Check ud',
+        available: OptionAvailable.PRIORITY,
     },
     {
         id: 1,
-        name: 'Efter aftale'
+        name: 'Gåtur',
+        available: OptionAvailable.AVAILABLE,
     },
     {
         id: 2,
-        name: 'Biblioteksvagt'
-    }
+        name: 'Efter aftale',
+        available: OptionAvailable.AVAILABLE,
+    },
+    {
+        id: 3,
+        name: 'Biblioteksvagt',
+        available: OptionAvailable.NOT_AVAILABLE,
+    },
 ]
 
 const db: DbInterface = {
@@ -78,23 +97,21 @@ const server = () => {
     app.use('/', express.static('/home/pieter/Desktop/gitlab/neocheckin/flutter-app/build/web'));
 
     app.get('/api/employee/:rfid', (req, res) => {
-        const employeeId = req.params.rfid ?? '-1';
+        const employeeId = req.params.rfid ?? '';
         if (db[employeeId]) return res.status(200).json({employee: db[employeeId]});
         
         return res.status(400).json({error: "employee does not exist"});
     });
 
     app.post('/api/employee/cardscanned', (req, res) => {
-        const employeeRfid = req.body.employeeRfid ?? '-1';
+        const employeeRfid = req.body.employeeRfid ?? '';
 
-        if (employeeRfid === '-1') 
-            return res.status(400).json({ error: 'no rfid given' });
         if (!db[employeeRfid]) 
             return res.status(400).json({ error: 'user doesnt exist' });
-        if (req.body.checkingIn === null || req.body.checkingIn === undefined) 
-            return res.status(400).json({ error: 'checkingIn not given' })
+        if (req.body.option === null || req.body.option === undefined) 
+            return res.status(400).json({ error: 'option not given' })
 
-        db[employeeRfid].working = req.body.checkingIn;
+        db[employeeRfid].working = req.body.option == 0;
         
         return res.status(200).json({ employee: db[employeeRfid] });
     });
@@ -126,8 +143,7 @@ const server = () => {
         });
     });
 
-    app.get('/api/options/available', (req, res) => {
-
+    app.get('/api/options', (req, res) => {
         return res.status(200).json({
             options: options, 
         });

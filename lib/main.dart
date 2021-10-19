@@ -3,16 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:neocheckin/components/cancel_button.dart';
 import 'package:neocheckin/components/cancel_button_list.dart';
 import 'package:neocheckin/components/card_reader_input.dart';
-import 'package:neocheckin/components/option_display.dart';
+import 'package:neocheckin/components/flex_and_option_display.dart';
 import 'package:neocheckin/components/employee_list.dart';
 import 'package:neocheckin/components/constrained_sidebar.dart';
 import 'package:neocheckin/models/option.dart';
-import 'package:neocheckin/responses/employee.dart';
 import 'package:neocheckin/responses/employees_working.dart';
-import 'package:neocheckin/components/flex_display.dart';
 import 'package:neocheckin/models/employee.dart';
-import 'package:neocheckin/responses/options_available.dart';
 import 'package:neocheckin/utils/http_request.dart';
+import 'package:neocheckin/utils/http_requests/card_scanned.dart';
+import 'package:neocheckin/utils/http_requests/get_updated_options.dart';
 
 void main() {
   runApp(const App());
@@ -36,6 +35,7 @@ class App extends StatelessWidget {
           body: HomePage()
         ),
       ),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
@@ -51,47 +51,38 @@ class _HomePageState extends State<HomePage> {
   final List<CancelButtonController> _cancelButtons = [];
   List<Option> _options = [];
   Option _optionSelected = NullOption();
+  Option _priorityOption = NullOption();
   Employee _activeEmployee = NullEmployee();
   Map<String, List<Employee>> _employees = {};
-  String _errorMessage = '';
 
   void _setOption(Option option) => setState(() => _optionSelected = option );
   void _setEmployee(Employee employee) => setState(() => _activeEmployee = employee );
-  void _displayError(String message) => setState(() => _errorMessage = message);
 
   void _updateOptions() async {
-    Map<String, dynamic> body = await HttpRequest.get('$apiUrl/options/available', _displayError);
-    OptionsAvailableResponse response = OptionsAvailableResponse.fromJson(body);
-    if (response.error == 'none') {
-      bool isIdentical = (_options.length == response.options.length);
-      if (isIdentical) {
-        for (int i = 0; i < _options.length; ++i) {
-          if (_options[i].id != response.options[i].id) {
-            isIdentical = false;
-          }
-        }
-      }
-      if (!isIdentical) setState(() => _options = response.options);
+    List<Option> updated = await getUpdatedOptions(_options, context);
+    bool isIdentical = optionsAreIdentical(_options, updated);
+    if (!isIdentical) {
+      Option priorityOption = getPriorityOption(updated);
+      setState(() {
+        _options = updated;
+        _priorityOption = priorityOption;
+        _optionSelected = priorityOption;
+      });
     }
 
     Timer(const Duration(minutes: 1), _updateOptions);
   }
   void _updateEmployees() async {
-    Map<String, dynamic> body = await HttpRequest.get('$apiUrl/employees/working', _displayError);
+    Map<String, dynamic> body = await HttpRequest.httpGet('$apiUrl/employees/working', context);
     EmployeesWorkingResponse response = EmployeesWorkingResponse.fromJson(body);
     if (response.error == 'none') {
       setState(() => _employees = response.ordered );
     }
   }
-  void _updateCancelButtons(CancelButtonController controller, { bool remove = false }) {
-    setState(() {
-      if (!remove) {
-        _cancelButtons.add(controller);
-      } else {
-        _cancelButtons.removeWhere((p) => p == controller);
-      }
-    });
-  }
+  void _addCancelButton(CancelButtonController controller) =>
+    setState(() => _cancelButtons.add(controller));
+  void _removeCancelButton(CancelButtonController controller) =>
+    setState(() => _cancelButtons.removeWhere((p) => p == controller));
 
   @override
   void initState() {
@@ -100,45 +91,35 @@ class _HomePageState extends State<HomePage> {
     _updateOptions();
   }
 
+  ConstrainedSidebar _cancelButtonList() {
+    return ConstrainedSidebar(
+      child: Padding(
+        padding: const EdgeInsets.only(left: 16.0),
+        child: CancelButtonList(
+          cancelButtons: _cancelButtons,
+          removeCancelButton: (CancelButtonController controller) { _removeCancelButton(controller); },
+        ),
+      ),
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) =>
   Stack(
     children: [
       GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onTap: () {_setOption(NullOption());},
+        onTap: () => _setOption(_priorityOption),
         child: Row(
           children: [
-            ConstrainedSidebar(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 16.0),
-                child: CancelButtonList(
-                  cancelButtons: _cancelButtons,
-                  removeCancelButton: (CancelButtonController controller) { _updateCancelButtons(controller, remove: true); },
-                ),
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    if (_activeEmployee is! NullEmployee)
-                      Expanded(
-                        child: FlexDisplay(employee: _activeEmployee, setEmployee: _setEmployee),
-                      ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 16, top: 8),
-                      child: OptionDisplay(
-                        selected: _optionSelected, 
-                        options: _options, 
-                        stateFunction: _setOption
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            _cancelButtonList(),
+            UserDisplay(
+              employee: _activeEmployee,
+              setEmployee: _setEmployee,
+              optionSelected: _optionSelected,
+              options: _options,
+              setOption: _setOption,
             ),
             ConstrainedSidebar(
               child: Padding(
@@ -150,60 +131,19 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       CardReaderInput(
-        onSubmitted: (String rfid) async {
-          Map<String, dynamic> body = await HttpRequest.get('$apiUrl/employee/$rfid', _displayError);
-          EmployeeResponse response = EmployeeResponse.fromJson(body);
-          Employee employee = response.employee;
-          if (response.error == 'none') {
-            _setEmployee(response.employee);
-            Option optionCache = _optionSelected;
-            _updateCancelButtons(
-              CancelButtonController(
-                duration: 5,
-
-                action: 'check ' 
-                  + (employee.working ? ('ud' + (_optionSelected.id != -1 ? ' (' + _optionSelected.name.toLowerCase() + ')' : '')) : 'ind') 
-                  + ' for ' 
-                  + employee.name.split(' ')[0], 
-
-                callback: () async {
-                  Map<String, dynamic> httpReq = {
-                    "employeeRfid": rfid,
-                    "optionId": optionCache.id,
-                    "checkingIn": !employee.working, 
-                  };
-                  await HttpRequest.post('$apiUrl/employee/cardscanned', httpReq, _displayError);
-                  _updateEmployees();
-                },
-
-                unmountCallback: (CancelButtonController controller) { _updateCancelButtons(controller, remove: true); },
-
-              )
-            );
-            _setOption(NullOption());
-          }
+        onSubmitted: (String rfid) {
+          // ¯\_(ツ)_/¯
+          cardReaderSubmit(
+            rfid: rfid, 
+            optionSelected: _optionSelected, 
+            errorContext: context, 
+            addCancelButton: _addCancelButton,
+            removeCancelButton: _removeCancelButton,
+            setEmployee: _setEmployee,
+            updateEmployeesCallback: _updateEmployees,
+            resetSelected: () => _setOption(_priorityOption)
+          ); 
         }
-      ),
-      if (_errorMessage != '') 
-      AlertDialog(
-        title: const Text('En fejl opstod:'),
-        content: SingleChildScrollView(
-          child: Text(
-            _errorMessage,
-            style: const TextStyle(fontFamily: 'RobotoMono')
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: (){_displayError('');}, 
-            child: const Padding(
-              padding: EdgeInsets.all(8),
-              child: Text(
-                'OK', style: TextStyle(fontSize: 20),
-              ),
-            )
-          )
-        ]
       ),
     ],
   );
