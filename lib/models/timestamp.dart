@@ -8,18 +8,16 @@ class Timestamp {
   final int minute;
   final int seconds;
   final int milliSeconds;
-  final String dateTime;
-  final String date;
-  final String time;
-  final String timeZone;
-  final String dayOfWeek;
-  final bool dstActive;
+  final String isoDate;         
+  final String date;        
+  final String time;        
+  final bool dstActive;     
 
   Timestamp({
     this.year = 0, this.month = 0, this.day = 0, 
     this.hour = 0, this.minute = 0, this.seconds = 0, this.milliSeconds = 0,
-    this.dateTime = "", this.date = "", this.time = "", this.timeZone = "",
-    this.dayOfWeek = "", this.dstActive = false
+    this.isoDate = "", this.date = "", this.time = "",
+    this.dstActive = false
   });
 
   Timestamp.fromJson(Map<String, dynamic> json)
@@ -30,10 +28,8 @@ class Timestamp {
       minute       = json['minute'],
       seconds      = json['seconds'],
       milliSeconds = json['milliSeconds'],
-      dateTime     = json['dateTime'],
+      isoDate          = json['dateTime'],
       date         = json['date'],
       time         = json['time'],
-      timeZone     = json['timeZone'],
-      dayOfWeek    = json['dayOfWeek'],
       dstActive    = json['dstActive'];
 }
