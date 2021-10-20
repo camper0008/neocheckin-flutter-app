@@ -10,7 +10,7 @@ import 'package:neocheckin/utils/http_request.dart';
 import 'package:neocheckin/utils/http_requests/get_timestamp.dart';
 
 
-_didNotCancelCallback({
+_sendCardScanRequest({
   required BuildContext errorContext, required String rfid, 
   required int optionId, required Function() updateEmployees
 }) async {
@@ -50,7 +50,7 @@ cardReaderSubmit({
         duration: 5,
         action: optionSelected.name.toLowerCase() + ' for ' + employee.name.split(' ')[0],
         callback: () =>
-          _didNotCancelCallback(
+          _sendCardScanRequest(
             errorContext: errorContext,
             rfid: rfid, 
             optionId: optionSelected.id, 
