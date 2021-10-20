@@ -41,6 +41,7 @@ cardReaderSubmit({
   required Function(CancelButtonController) addCancelButton, required Function(CancelButtonController) removeCancelButton,
 }) async {
   if (optionSelected is NullOption) return displayError(errorContext, "Du skal vælge en mulighed.");
+  if (rfid == '') return displayError(errorContext, "Tekstfelt tom.");
 
   Employee employee = await _getEmployeeFromRfid(rfid, errorContext);
   if (employee is! NullEmployee) {
