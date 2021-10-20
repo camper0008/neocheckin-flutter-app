@@ -9,14 +9,16 @@ import 'package:neocheckin/utils/http_request.dart';
 
 
 _didNotCancelCallback({
-  required BuildContext errorContext, 
-  required String rfid, 
-  required int optionId, 
-  required Function() updateEmployees
+  required BuildContext errorContext, required String rfid, 
+  required int optionId, required Function() updateEmployees
 }) async {
   Map<String, dynamic> httpReq = {
+    // TODO: implement correctly
     "employeeRfid": rfid,
     "option": optionId,
+    "apiKey": "",
+    "systemId": "test-01",
+    "timestamp": "",
   };
   await HttpRequest.httpPost('$apiUrl/employee/cardscanned', httpReq, errorContext);
   updateEmployees();
@@ -29,14 +31,10 @@ Future<Employee> _getEmployeeFromRfid(String rfid, BuildContext context) async {
 }
 
 cardReaderSubmit({
-  required BuildContext errorContext, 
-  required String rfid, 
-  required Option optionSelected, 
-  required Function() resetSelected,
-  required Function(Employee) setEmployee,
-  required Function() updateEmployeesCallback,
-  required Function(CancelButtonController) addCancelButton,
-  required Function(CancelButtonController) removeCancelButton,
+  required BuildContext errorContext, required String rfid, 
+  required Option optionSelected, required Function() resetSelected,
+  required Function(Employee) setEmployee, required Function() updateEmployeesCallback,
+  required Function(CancelButtonController) addCancelButton, required Function(CancelButtonController) removeCancelButton,
 }) async {
   if (optionSelected is NullOption) return displayError(errorContext, "Du skal vælge en mulighed.");
 
