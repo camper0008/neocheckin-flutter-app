@@ -3,22 +3,26 @@ import 'package:flutter/widgets.dart';
 import 'package:neocheckin/components/cancel_button.dart';
 import 'package:neocheckin/models/employee.dart';
 import 'package:neocheckin/models/option.dart';
+import 'package:neocheckin/models/timestamp.dart';
 import 'package:neocheckin/responses/employee.dart';
 import 'package:neocheckin/utils/display_error.dart';
 import 'package:neocheckin/utils/http_request.dart';
+import 'package:neocheckin/utils/http_requests/get_timestamp.dart';
 
 
 _didNotCancelCallback({
   required BuildContext errorContext, required String rfid, 
   required int optionId, required Function() updateEmployees
 }) async {
+  Timestamp timestamp = await getUpdatedTimestamp(errorContext);
+
   Map<String, dynamic> httpReq = {
     // TODO: implement correctly
     "employeeRfid": rfid,
     "option": optionId,
     "apiKey": "",
     "systemId": "test-01",
-    "timestamp": "",
+    "timestamp": timestamp.isoDate,
   };
   await HttpRequest.httpPost('$apiUrl/employee/cardscanned', httpReq, errorContext);
   updateEmployees();
