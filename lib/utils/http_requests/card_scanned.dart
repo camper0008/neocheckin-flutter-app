@@ -5,6 +5,7 @@ import 'package:neocheckin/models/employee.dart';
 import 'package:neocheckin/models/option.dart';
 import 'package:neocheckin/models/timestamp.dart';
 import 'package:neocheckin/responses/employee.dart';
+import 'package:neocheckin/utils/config.dart';
 import 'package:neocheckin/utils/display_error.dart';
 import 'package:neocheckin/utils/http_request.dart';
 import 'package:neocheckin/utils/http_requests/get_timestamp.dart';
@@ -17,19 +18,18 @@ _sendCardScanRequest({
   Timestamp timestamp = await getUpdatedTimestamp(errorContext);
 
   Map<String, dynamic> httpReq = {
-    // TODO: implement correctly
     "employeeRfid": rfid,
     "option": optionId,
-    "apiKey": "",
-    "systemId": "test-01",
+    "apiKey": (await config)["API_KEY"],
+    "systemId": (await config)["SYSTEM_ID"],
     "timestamp": timestamp.isoDate,
   };
-  await HttpRequest.httpPost('$apiUrl/employee/cardscanned', httpReq, errorContext);
+  await HttpRequest.httpPost((await config)["API_URL"]! + '/employee/cardscanned', httpReq, errorContext);
   updateEmployees();
 }
 
 Future<Employee> _getEmployeeFromRfid(String rfid, BuildContext context) async {
-  Map<String, dynamic> body = await HttpRequest.httpGet('$apiUrl/employee/$rfid', context);
+  Map<String, dynamic> body = await HttpRequest.httpGet((await config)["API_URL"]! + '/employee/$rfid', context);
   EmployeeResponse response = EmployeeResponse.fromJson(body);
   return response.employee;
 }
