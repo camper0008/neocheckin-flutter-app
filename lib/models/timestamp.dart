@@ -1,5 +1,13 @@
 // https://www.timeapi.io/api/Time/current/zone?timeZone=Europe/Copenhagen
 
+dynamic _valueOrDefault(dynamic v, dynamic d) {
+  if (v.runtimeType == null.runtimeType) {
+    return d;
+  } else {
+    return v;
+  }
+}
+
 class Timestamp {
   final int year;
   final int month;
@@ -20,17 +28,16 @@ class Timestamp {
     this.dstActive = false
   });
 
-  // TODO: refactor into functions
   Timestamp.fromJson(Map<String, dynamic> json)
-    : year         = json['year'].runtimeType         != null.runtimeType ? json['year'] : 0,
-      month        = json['month'].runtimeType        != null.runtimeType ? json['month'] : 0,
-      day          = json['day'].runtimeType          != null.runtimeType ? json['day'] : 0,
-      hour         = json['hour'].runtimeType         != null.runtimeType ? json['hour'] : 0,
-      minute       = json['minute'].runtimeType       != null.runtimeType ? json['minute'] : 0,
-      seconds      = json['seconds'].runtimeType      != null.runtimeType ? json['seconds'] : 0,
-      milliSeconds = json['milliSeconds'].runtimeType != null.runtimeType ? json['milliSeconds'] : 0,
-      isoDate      = json['dateTime'].runtimeType     != null.runtimeType ? json['dateTime'] : "",
-      date         = json['date'].runtimeType         != null.runtimeType ? json['date'] : "",
-      time         = json['time'].runtimeType         != null.runtimeType ? json['time'] : "",
-      dstActive    = json['dstActive'].runtimeType    != null.runtimeType ? json['dstActive'] : false;
+    : year         = _valueOrDefault(json['year'], 0),
+      month        = _valueOrDefault(json['month'], 0),
+      day          = _valueOrDefault(json['day'], 0),
+      hour         = _valueOrDefault(json['hour'], 0),
+      minute       = _valueOrDefault(json['minute'], 0),
+      seconds      = _valueOrDefault(json['seconds'], 0),
+      milliSeconds = _valueOrDefault(json['milliSeconds'], 0),
+      isoDate      = _valueOrDefault(json['dateTime'], ""),
+      date         = _valueOrDefault(json['date'], ""),
+      time         = _valueOrDefault(json['time'], ""),
+      dstActive    = _valueOrDefault(json['dstActive'], false);
 }
