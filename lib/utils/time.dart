@@ -1,6 +1,6 @@
 class Time {
   int time = 0;
-  Time({seconds = 0, minutes = 0, hours = 0}) {
+  Time({int seconds = 0, int minutes = 0, int hours = 0}) {
     time = seconds + minutes*60 + hours*60*60;
   }
 
