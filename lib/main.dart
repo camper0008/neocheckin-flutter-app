@@ -10,6 +10,7 @@ import 'package:neocheckin/models/option.dart';
 import 'package:neocheckin/models/timestamp.dart';
 import 'package:neocheckin/responses/employees_working.dart';
 import 'package:neocheckin/models/employee.dart';
+import 'package:neocheckin/utils/config.dart';
 import 'package:neocheckin/utils/http_request.dart';
 import 'package:neocheckin/utils/http_requests/card_scanned.dart';
 import 'package:neocheckin/utils/http_requests/get_timestamp.dart';
@@ -95,7 +96,7 @@ class _HomePageState extends State<HomePage> {
     Timer(const Duration(minutes: 1), _updateOptions);
   }
   void _updateEmployees() async {
-    Map<String, dynamic> body = await HttpRequest.httpGet('$apiUrl/employees/working', context);
+    Map<String, dynamic> body = await HttpRequest.httpGet((await config)["API_URL"]! + '/employees/working', context);
     EmployeesWorkingResponse response = EmployeesWorkingResponse.fromJson(body);
     if (response.error == 'none') {
       setState(() => _workingEmployees = response.ordered );
