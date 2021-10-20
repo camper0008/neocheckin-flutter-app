@@ -28,20 +28,19 @@ class _FlexDisplayState extends State<FlexDisplay> {
     _flexColor = isNegative ? Colors.red : Colors.green;
   }
   Image _getImageFromBase64(String base64) {
-    try {
-      return Image.memory(
-        base64Decode(base64),
-        gaplessPlayback: true,
-        width: 240,
-        height: 320,
-      );
-    } catch(err) {
-      return Image.asset(
-        "assets/images/placeholder.png",
-        width: 240,
-        height: 320,
-      );
-    }
+    return Image.memory(
+      base64Decode(base64),
+      gaplessPlayback: true,
+      width: 240,
+      height: 320,
+      errorBuilder: (BuildContext context, Object object, StackTrace? trace) {
+        return Image.asset(
+          "assets/images/placeholder.png",
+          width: 240,
+          height: 320,
+        );
+      },
+    );
   }
 
   @override
