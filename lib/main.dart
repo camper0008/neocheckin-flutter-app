@@ -167,7 +167,7 @@ class _HomePageState extends State<HomePage> {
               ":" + _clockTime.getFormattedMinutes() + 
               ":" + _clockTime.getFormattedSeconds(),
               style: const TextStyle(
-                fontSize: 48,
+                fontSize: 44,
                 backgroundColor: Colors.white,
               ),
             ),

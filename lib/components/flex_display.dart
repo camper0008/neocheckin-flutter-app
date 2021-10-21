@@ -84,43 +84,48 @@ class _FlexDisplayState extends State<FlexDisplay> {
               padding: const EdgeInsets.only(right: 40),
               child: _getImageFromBase64(_employee.photo)
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  _employee.name,
-                  style: const TextStyle(
-                    fontSize: (14*2.75),
+            Flexible(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    _employee.name,
+                    softWrap: true,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 7,
+                    style: const TextStyle(
+                      fontSize: (14*2.25),
+                    ),
                   ),
-                ),
-                Text.rich(
-                  TextSpan(
-                    style: const TextStyle(fontSize: (14*2.25)),
-                    children: <TextSpan>[
-                      const TextSpan(
-                        text: 'Flex: '
-                      ),
-                      TextSpan(
-                        text: _flexPrefix + _employee.flex.getFormattedHours(),
-                        style: TextStyle(
-                          color: _flexColor,
-                          fontFamily: 'RobotoMono',
+                  Text.rich(
+                    TextSpan(
+                      style: const TextStyle(fontSize: (14*2.25)),
+                      children: <TextSpan>[
+                        const TextSpan(
+                          text: 'Flex: '
                         ),
-                      ),
-                      const TextSpan(
-                        text: ':',
-                      ),
-                      TextSpan(
-                        text: _employee.flex.getFormattedMinutes(), 
-                        style: TextStyle(
-                          color: _flexColor,
-                          fontFamily: 'RobotoMono',
+                        TextSpan(
+                          text: _flexPrefix + _employee.flex.getFormattedHours(),
+                          style: TextStyle(
+                            color: _flexColor,
+                            fontFamily: 'RobotoMono',
+                          ),
                         ),
-                      ),
-                    ],
+                        const TextSpan(
+                          text: ':',
+                        ),
+                        TextSpan(
+                          text: _employee.flex.getFormattedMinutes(), 
+                          style: TextStyle(
+                            color: _flexColor,
+                            fontFamily: 'RobotoMono',
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),

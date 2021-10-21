@@ -48,7 +48,7 @@ cardReaderSubmit({
     setEmployee(employee);
     addCancelButton(
       CancelButtonController(
-        duration: 5,
+        duration: 10,
         action: optionSelected.name.toLowerCase() + ' for ' + employee.name.split(' ')[0],
         callback: () =>
           _sendCardScanRequest(
