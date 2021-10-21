@@ -35,7 +35,6 @@ class _OptionDisplayState extends State<OptionDisplay> {
   }
 
   Widget _optionsButton(Option option, ColorScheme colorScheme) =>
-    (option.available == OptionAvailable.available) ?
     ElevatedButton(
       style: ElevatedButton.styleFrom(
         elevation: (option.id == _selected.id) ? 8 : 0,
@@ -51,8 +50,7 @@ class _OptionDisplayState extends State<OptionDisplay> {
           )
         ),
       ),
-    ) 
-    : const SizedBox.square(dimension: 0); // this is because it does not understand null
+    );
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +60,10 @@ class _OptionDisplayState extends State<OptionDisplay> {
       alignment: WrapAlignment.center,
       spacing: 8.0,
       runSpacing: 8.0,
-      children: _options.map((Option option) => _optionsButton(option, colorScheme)).toList()
+      children: _options
+        .where((Option option) => option.available == OptionAvailable.available)
+        .map((Option option) => _optionsButton(option, colorScheme))
+        .toList()
     );
   }
 }
