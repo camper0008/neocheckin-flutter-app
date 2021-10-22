@@ -11,7 +11,7 @@ class ConstrainedSidebar extends StatelessWidget {
   Widget build(BuildContext context) =>
   ConstrainedBox(
     constraints: const BoxConstraints(
-      minWidth: 400,
+      minWidth: 300,
     ),
     child: SizedBox(
       width: MediaQuery.of(context).size.width * 0.25,

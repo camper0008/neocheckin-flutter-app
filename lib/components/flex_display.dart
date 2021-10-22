@@ -28,20 +28,19 @@ class _FlexDisplayState extends State<FlexDisplay> {
     _flexColor = isNegative ? Colors.red : Colors.green;
   }
   Image _getImageFromBase64(String base64) {
-    try {
-      return Image.memory(
-        base64Decode(base64),
-        gaplessPlayback: true,
-        width: 240,
-        height: 320,
-      );
-    } catch(err) {
-      return Image.asset(
-        "assets/images/placeholder.png",
-        width: 240,
-        height: 320,
-      );
-    }
+    return Image.memory(
+      base64Decode(base64),
+      gaplessPlayback: true,
+      width: 240,
+      height: 320,
+      errorBuilder: (BuildContext context, Object object, StackTrace? trace) {
+        return Image.asset(
+          "assets/images/placeholder.png",
+          width: 240,
+          height: 320,
+        );
+      },
+    );
   }
 
   @override
@@ -85,43 +84,48 @@ class _FlexDisplayState extends State<FlexDisplay> {
               padding: const EdgeInsets.only(right: 40),
               child: _getImageFromBase64(_employee.photo)
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  _employee.name,
-                  style: const TextStyle(
-                    fontSize: (14*2.75),
+            Flexible(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    _employee.name,
+                    softWrap: true,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 7,
+                    style: const TextStyle(
+                      fontSize: (14*2.25),
+                    ),
                   ),
-                ),
-                Text.rich(
-                  TextSpan(
-                    style: const TextStyle(fontSize: (14*2.25)),
-                    children: <TextSpan>[
-                      const TextSpan(
-                        text: 'Flex: '
-                      ),
-                      TextSpan(
-                        text: _flexPrefix + _employee.flex.getFormattedHours(),
-                        style: TextStyle(
-                          color: _flexColor,
-                          fontFamily: 'RobotoMono',
+                  Text.rich(
+                    TextSpan(
+                      style: const TextStyle(fontSize: (14*2.25)),
+                      children: <TextSpan>[
+                        const TextSpan(
+                          text: 'Flex: '
                         ),
-                      ),
-                      const TextSpan(
-                        text: ':',
-                      ),
-                      TextSpan(
-                        text: _employee.flex.getFormattedMinutes(), 
-                        style: TextStyle(
-                          color: _flexColor,
-                          fontFamily: 'RobotoMono',
+                        TextSpan(
+                          text: _flexPrefix + _employee.flex.getFormattedHours(),
+                          style: TextStyle(
+                            color: _flexColor,
+                            fontFamily: 'RobotoMono',
+                          ),
                         ),
-                      ),
-                    ],
+                        const TextSpan(
+                          text: ':',
+                        ),
+                        TextSpan(
+                          text: _employee.flex.getFormattedMinutes(), 
+                          style: TextStyle(
+                            color: _flexColor,
+                            fontFamily: 'RobotoMono',
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),

@@ -1,5 +1,13 @@
 // https://www.timeapi.io/api/Time/current/zone?timeZone=Europe/Copenhagen
 
+dynamic _valueOrDefault(dynamic v, dynamic d) {
+  if (v.runtimeType == null.runtimeType) {
+    return d;
+  } else {
+    return v;
+  }
+}
+
 class Timestamp {
   final int year;
   final int month;
@@ -21,15 +29,15 @@ class Timestamp {
   });
 
   Timestamp.fromJson(Map<String, dynamic> json)
-    : year         = json['year'],
-      month        = json['month'],
-      day          = json['day'],
-      hour         = json['hour'],
-      minute       = json['minute'],
-      seconds      = json['seconds'],
-      milliSeconds = json['milliSeconds'],
-      isoDate          = json['dateTime'],
-      date         = json['date'],
-      time         = json['time'],
-      dstActive    = json['dstActive'];
+    : year         = _valueOrDefault(json['year'], 0),
+      month        = _valueOrDefault(json['month'], 0),
+      day          = _valueOrDefault(json['day'], 0),
+      hour         = _valueOrDefault(json['hour'], 0),
+      minute       = _valueOrDefault(json['minute'], 0),
+      seconds      = _valueOrDefault(json['seconds'], 0),
+      milliSeconds = _valueOrDefault(json['milliSeconds'], 0),
+      isoDate      = _valueOrDefault(json['dateTime'], ""),
+      date         = _valueOrDefault(json['date'], ""),
+      time         = _valueOrDefault(json['time'], ""),
+      dstActive    = _valueOrDefault(json['dstActive'], false);
 }

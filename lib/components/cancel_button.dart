@@ -83,7 +83,7 @@ class _CancelButtonState extends State<CancelButton> {
         padding: const EdgeInsets.symmetric(vertical: 16),
         child: Text(
           'Annuller ' + _controller.action + '? [$_secondsLeft]',
-          style: const TextStyle(fontSize: 20),
+          style: const TextStyle(fontSize: 18),
         ),
       ),
       icon: const Padding(

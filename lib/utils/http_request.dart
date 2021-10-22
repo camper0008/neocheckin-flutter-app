@@ -4,8 +4,6 @@ import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:neocheckin/utils/display_error.dart';
 
-const String apiUrl = "http://10.220.220.13:6000/api";
-
 class HttpRequest {
   static Future<Map<String, dynamic>> httpGet(String url, BuildContext errorContext) async {
     try {
