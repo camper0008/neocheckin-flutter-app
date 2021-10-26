@@ -1,4 +1,6 @@
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/widgets.dart';
+import 'package:neocheckin/utils/display_error.dart';
 
 Map<String, String> _parseConfigFile(String text) {
   Map<String, String> result = <String, String>{};
@@ -11,7 +13,20 @@ Map<String, String> _parseConfigFile(String text) {
   return result;
 }
 
+configFileExists(BuildContext context) async {
+  try {
+    await rootBundle.loadString('assets/settings.conf');
+  } catch(err) {
+    displayError(context, "config file does not exist");
+  }
+}
+
 Future<Map<String, String>> get config async {
-  String text = await rootBundle.loadString('assets/config.txt');
-  return _parseConfigFile(text);
+  try {
+    String text = await rootBundle.loadString('assets/settings.conf');
+    return _parseConfigFile(text);
+  } catch (err) {
+    throw Exception("could not load settings.conf");
+  }
+
 }

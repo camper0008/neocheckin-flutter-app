@@ -114,6 +114,7 @@ class _HomePageState extends State<HomePage> {
     _updateOptions();
     _recalibrateClockTime();
     _updateClockTime();
+    configFileExists(context);
   }
 
   ConstrainedSidebar _cancelButtonList() {
