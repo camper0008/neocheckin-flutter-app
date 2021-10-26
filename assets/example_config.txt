@@ -1,7 +1,0 @@
-# the settings for this app is defined in a file called `config.txt` in `assets`
-# the file is gitignored to prevent sharing API keys and other sensitive data remotely.
-# this is an example of how the `config.txt` file should look.
-
-SYSTEM_ID=eux-login-01
-API_URL=http://10.220.220.13:5000/api
-API_KEY=mysecretkey
