@@ -45,21 +45,29 @@ cardReaderSubmit({
 
   Employee employee = await _getEmployeeFromRfid(rfid, errorContext);
   if (employee is! NullEmployee) {
-    setEmployee(employee);
-    addCancelButton(
-      CancelButtonController(
-        duration: 10,
-        action: optionSelected.name.toLowerCase() + ' for ' + employee.name.split(' ')[0],
-        callback: () =>
-          _sendCardScanRequest(
-            errorContext: errorContext,
-            rfid: rfid, 
-            optionId: optionSelected.id, 
-            updateEmployees: updateEmployeesCallback,
-          ),
-        unmountCallback: removeCancelButton,
-      )
-    );
+    // TODO: Update bandaid to use category instead of hardcoding for v0.2
+    if (!employee.working && optionSelected.id == 0 || employee.working && optionSelected.id != 0) {
+      setEmployee(employee);
+      addCancelButton(
+        CancelButtonController(
+          duration: 10,
+          action: optionSelected.name.toLowerCase() + ' for ' + employee.name.split(' ')[0],
+          callback: () =>
+            _sendCardScanRequest(
+              errorContext: errorContext,
+              rfid: rfid, 
+              optionId: optionSelected.id, 
+              updateEmployees: updateEmployeesCallback,
+            ),
+          unmountCallback: removeCancelButton,
+        )
+      );
+    } else if (!employee.working) {
+      displayError(errorContext, "Du kan ikke checke ud, når du ikke er checket ind.");
+    } else if (employee.working) {
+      displayError(errorContext, "Du kan ikke checke ind, når du ikke er checket ud.");
+    }
+
   }
   resetSelected();
 }
