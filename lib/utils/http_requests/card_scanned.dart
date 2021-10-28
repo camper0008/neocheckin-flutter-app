@@ -21,7 +21,7 @@ _sendCardScanRequest({
     "employeeRfid": rfid,
     "name": option.name,
     "option": option.id,
-    "apiKey": (await config)["API_KEY"],
+    "apiKey": (await config)["API_POST_KEY"],
     "systemId": (await config)["SYSTEM_ID"],
     "timestamp": timestamp.isoDate,
   };
