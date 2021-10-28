@@ -13,13 +13,14 @@ import 'package:neocheckin/utils/http_requests/get_timestamp.dart';
 
 _sendCardScanRequest({
   required BuildContext errorContext, required String rfid, 
-  required int optionId, required Function() updateEmployees
+  required Option option, required Function() updateEmployees
 }) async {
   Timestamp timestamp = await getUpdatedTimestamp(errorContext);
 
   Map<String, dynamic> httpReq = {
     "employeeRfid": rfid,
-    "option": optionId,
+    "name": option.name,
+    "option": option.id,
     "apiKey": (await config)["API_KEY"],
     "systemId": (await config)["SYSTEM_ID"],
     "timestamp": timestamp.isoDate,
@@ -45,18 +46,18 @@ cardReaderSubmit({
 
   Employee employee = await _getEmployeeFromRfid(rfid, errorContext);
   if (employee is! NullEmployee) {
-    // TODO: Update bandaid to use category instead of hardcoding for v0.2
-    if (!employee.working && optionSelected.id == 0 || employee.working && optionSelected.id != 0) {
+    if (!employee.working && optionSelected.category == "check in" || 
+         employee.working && optionSelected.category == "check out") {
       setEmployee(employee);
       addCancelButton(
         CancelButtonController(
           duration: 10,
-          action: optionSelected.name.toLowerCase() + ' for ' + employee.name.split(' ')[0],
+          action: optionSelected.displayName.toLowerCase() + ' for ' + employee.name.split(' ')[0],
           callback: () =>
             _sendCardScanRequest(
               errorContext: errorContext,
               rfid: rfid, 
-              optionId: optionSelected.id, 
+              option: optionSelected, 
               updateEmployees: updateEmployeesCallback,
             ),
           unmountCallback: removeCancelButton,

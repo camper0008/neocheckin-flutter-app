@@ -8,13 +8,15 @@ enum OptionAvailable {
 class Option {
 	final int id;
 	final String name;
+	final String displayName;
+	final String category;
 	final OptionAvailable available;
-
-  Option({required this.id, required this.name, required this.available});
 
   Option.fromJson(Map<String, dynamic> json)
     : id = json['id'],
       name = json['name'],
+      displayName = json['displayName'],
+      category = json['category'],
       available = json['available'] == 0 ? OptionAvailable.notAvailable
         : json['available'] == 1 ? OptionAvailable.available
         : json['available'] == 2 ? OptionAvailable.priority
@@ -26,6 +28,10 @@ class NullOption implements Option {
   final int id = -1;
   @override
   final String name = '';
+  @override
+  final String displayName = '';
+  @override
+  final String category = "";
   @override
   final OptionAvailable available = OptionAvailable.invalid;
 

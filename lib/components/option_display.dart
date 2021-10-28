@@ -44,7 +44,7 @@ class _OptionDisplayState extends State<OptionDisplay> {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
         child: Text(
-          option.name,
+          option.displayName,
           style: const TextStyle(
             fontSize: 32,
           )

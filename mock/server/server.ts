@@ -1,4 +1,4 @@
-// written after docs 18/10-21
+// written after docs 28/10-21
 // https://gitlab.pcvdata.dk/super-team-euxtra/neocheckin/docs
 
 import express from "express";
@@ -21,6 +21,8 @@ interface Employee {
 interface Option {
     id: number;
     name: string;
+    displayName: string;
+    category: "check in" | "check out";
     available: OptionAvailable;
 }
 
@@ -35,21 +37,29 @@ const options: Option[] = [
     {
         id: 0,
         name: 'Check ud',
+        displayName: 'Check ud',
+        category: 'check out',
         available: OptionAvailable.PRIORITY,
     },
     {
         id: 1,
         name: 'Gåtur',
+        displayName: 'Gåtur',
+        category: 'check out',
         available: OptionAvailable.AVAILABLE,
     },
     {
         id: 2,
         name: 'Efter aftale',
+        displayName: 'Efter aftale',
+        category: 'check out',
         available: OptionAvailable.AVAILABLE,
     },
     {
         id: 3,
         name: 'Biblioteksvagt',
+        displayName: 'Biblioteksvagt',
+        category: 'check out',
         available: OptionAvailable.NOT_AVAILABLE,
     },
 ]
