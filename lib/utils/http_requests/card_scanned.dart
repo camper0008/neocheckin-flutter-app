@@ -21,16 +21,16 @@ _sendCardScanRequest({
     "employeeRfid": rfid,
     "name": option.name,
     "option": option.id,
-    "apiKey": (await config)["API_POST_KEY"],
+    "apiKey": (await config)["WRAPPER_POST_KEY"],
     "systemId": (await config)["SYSTEM_ID"],
     "timestamp": timestamp.isoDate,
   };
-  await HttpRequest.httpPost((await config)["API_URL"]! + '/employee/cardscanned', httpReq, errorContext);
+  await HttpRequest.httpPost((await config)["CACHE_URL"]! + '/employee/cardscanned', httpReq, errorContext);
   updateEmployees();
 }
 
 Future<Employee> _getEmployeeFromRfid(String rfid, BuildContext context) async {
-  Map<String, dynamic> body = await HttpRequest.httpGet((await config)["API_URL"]! + '/employee/$rfid', context);
+  Map<String, dynamic> body = await HttpRequest.httpGet((await config)["CACHE_URL"]! + '/employee/$rfid', context);
   EmployeeResponse response = EmployeeResponse.fromJson(body);
   return response.employee;
 }

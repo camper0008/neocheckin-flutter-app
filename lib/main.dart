@@ -96,7 +96,7 @@ class _HomePageState extends State<HomePage> {
     Timer(const Duration(minutes: 1), _updateOptions);
   }
   void _updateEmployees() async {
-    Map<String, dynamic> body = await HttpRequest.httpGet((await config)["API_URL"]! + '/employees/working', context);
+    Map<String, dynamic> body = await HttpRequest.httpGet((await config)["CACHE_URL"]! + '/employees/working', context);
     EmployeesWorkingResponse response = EmployeesWorkingResponse.fromJson(body);
     if (response.error == 'none') {
       setState(() => _workingEmployees = response.ordered );
