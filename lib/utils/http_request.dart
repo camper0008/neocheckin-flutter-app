@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
+import 'package:neocheckin/utils/config.dart';
 import 'package:neocheckin/utils/display_error.dart';
 
 class HttpRequest {
@@ -12,6 +13,7 @@ class HttpRequest {
         headers: <String, String>{
           'Access-Control_Allow_Origin': '*',
           'Content-Type': 'application/json; charset=UTF-8',
+          'token': (await config)["API_GET_KEY"]!,
         },
       );
       if (response.statusCode < 400) {
