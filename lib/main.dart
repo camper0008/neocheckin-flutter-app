@@ -101,6 +101,8 @@ class _HomePageState extends State<HomePage> {
     if (response.error == 'none') {
       setState(() => _workingEmployees = response.ordered );
     }
+
+    Timer(const Duration(minutes: 1), _updateEmployees);
   }
   void _addCancelButton(CancelButtonController controller) =>
     setState(() => _cancelButtons.add(controller));
