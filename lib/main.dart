@@ -51,7 +51,7 @@ class _HomePageState extends State<HomePage> implements StateManagable {
   @override
   void refreshState() {setState((){});}
 
-  void updateOptions() async {
+  void _updateOptions() async {
     List<Option>? updated = await getUpdatedOptions(context);
     if (updated != null) {
       bool isIdentical = optionsAreIdentical(_stateManager.options, updated);
@@ -60,16 +60,15 @@ class _HomePageState extends State<HomePage> implements StateManagable {
         _stateManager.setPriorityOrNullOption();
       }
     }
-
-    Timer(const Duration(minutes: 1), updateOptions);
   }
 
   @override
   void initState() {
     super.initState();
     _stateManager = StateManager(state: this);
-    updateOptions();
+    _updateOptions();
     configFileExists(context);
+    Timer.periodic(const Duration(minutes: 1), (Timer t) {_updateOptions();});
   }
 
   @override

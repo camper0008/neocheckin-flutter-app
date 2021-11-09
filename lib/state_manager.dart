@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'package:neocheckin/components/cancel_button.dart';
 import 'package:neocheckin/models/employee.dart';
 import 'package:neocheckin/models/option.dart';
 import 'package:neocheckin/utils/http_requests/get_updated_options.dart';
+import 'package:neocheckin/utils/time.dart';
 
 
 abstract class StateManagable {
@@ -10,6 +12,7 @@ abstract class StateManagable {
 
 
 class StateManager {
+  int _activeEmployeeLastUpdated = 0;
   Employee _activeEmployee = NullEmployee();
   Option _activeOption = NullOption();
   List<Option> _options = [];
@@ -19,13 +22,28 @@ class StateManager {
   StateManager({required StateManagable state}) {
     _state = state;
   }
+
   Employee get activeEmployee {
     return _activeEmployee;
   }
   set activeEmployee(Employee e) {
+    _activeEmployeeLastUpdated = Time.now().getSeconds();
+    if (e is! NullEmployee) {
+      _setActiveEmployeeTimeout();
+    }
     _activeEmployee = e;
     _state.refreshState();
   }
+
+  void _setActiveEmployeeTimeout() {
+    int _scopedLastUpdated = _activeEmployeeLastUpdated;
+    Timer(const Duration(seconds: 5), (){
+      if (_activeEmployeeLastUpdated == _scopedLastUpdated) {
+        activeEmployee = NullEmployee();
+      }
+    });
+  }
+
   Option get activeOption {
     return _activeOption;
   }
@@ -44,6 +62,7 @@ class StateManager {
     _activeOption = getPriorityOrNullOption(options);
     _state.refreshState();
   }
+
   List<CancelButtonController> get cancelButtons {
     return _cancelButtons;
   }
