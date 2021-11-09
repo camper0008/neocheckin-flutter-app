@@ -1,5 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:neocheckin/components/cancel_button.dart';
+import 'package:neocheckin/components/constrained_sidebar.dart';
+
+ConstrainedSidebar constrainedCancelButtonList(
+  List<CancelButtonController> cancelButtons, 
+  Function(CancelButtonController) removeCancelButton
+)
+  => ConstrainedSidebar(
+    child: Padding(
+      padding: const EdgeInsets.only(left: 16.0),
+      child: CancelButtonList(
+        cancelButtons: cancelButtons,
+        removeCancelButton: (CancelButtonController controller) { removeCancelButton(controller); },
+      ),
+    ),
+  );
+
 
 class CancelButtonList extends StatefulWidget {
 
