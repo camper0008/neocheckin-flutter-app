@@ -160,7 +160,7 @@ const server = () => {
     });
 
     app.listen(5000, () => {
-        console.log('server started')
+        console.log('server started on port', 5000)
     })
 }
 
