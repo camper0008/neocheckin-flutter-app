@@ -13,7 +13,7 @@ import 'package:neocheckin/utils/http_requests/get_timestamp.dart';
 
 _sendCardScanRequest({
   required BuildContext errorContext, required String rfid, 
-  required Option option, required Function() updateEmployees
+  required Option option
 }) async {
   Timestamp timestamp = await getUpdatedTimestamp(errorContext);
 
@@ -26,11 +26,13 @@ _sendCardScanRequest({
     "timestamp": timestamp.isoDate,
   };
   await HttpRequest.httpPost((await config)["CACHE_URL"]! + '/employee/cardscanned', httpReq, errorContext);
-  updateEmployees();
 }
 
 Future<Employee> _getEmployeeFromRfid(String rfid, BuildContext context) async {
-  Map<String, dynamic> body = await HttpRequest.httpGet((await config)["CACHE_URL"]! + '/employee/$rfid', context);
+  String cacheUrl = (await config)["CACHE_URL"]!;
+
+
+  Map<String, dynamic> body = await HttpRequest.httpGet(cacheUrl + '/employee/$rfid', context);
   EmployeeResponse response = EmployeeResponse.fromJson(body);
   return response.employee;
 }
@@ -38,7 +40,7 @@ Future<Employee> _getEmployeeFromRfid(String rfid, BuildContext context) async {
 cardReaderSubmit({
   required BuildContext errorContext, required String rfid, 
   required Option optionSelected, required Function() resetSelected,
-  required Function(Employee) setEmployee, required Function() updateEmployeesCallback,
+  required Function(Employee) setEmployee,
   required Function(CancelButtonController) addCancelButton, required Function(CancelButtonController) removeCancelButton,
 }) async {
   if (optionSelected is NullOption) return displayError(errorContext, "Du skal vælge en mulighed.");
@@ -58,7 +60,6 @@ cardReaderSubmit({
               errorContext: errorContext,
               rfid: rfid, 
               option: optionSelected, 
-              updateEmployees: updateEmployeesCallback,
             ),
           unmountCallback: removeCancelButton,
         )
