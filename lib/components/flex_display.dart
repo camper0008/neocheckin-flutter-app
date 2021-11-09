@@ -43,7 +43,7 @@ class FlexDisplay extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(bottom: 36),
           child: Text(
-            (stateManager.activeEmployee.working ? 'Du er nu checket ud' : 'Du er nu checket ind'),
+            (stateManager.activeEmployee.working ? 'Du er nu tjekket ud' : 'Du er nu tjekket ind'),
             style: const TextStyle(
               fontSize: (14*3),
             ),

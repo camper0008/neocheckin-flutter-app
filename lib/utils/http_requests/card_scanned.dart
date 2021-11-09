@@ -65,9 +65,9 @@ cardReaderSubmit({
         )
       );
     } else if (!employee.working) {
-      displayError(errorContext, "Du kan ikke checke ud, når du ikke er checket ind.");
+      displayError(errorContext, "Du kan ikke tjekke ud, når du ikke er tjekket ind.");
     } else if (employee.working) {
-      displayError(errorContext, "Du kan ikke checke ind, når du ikke er checket ud.");
+      displayError(errorContext, "Du kan ikke tjekke ind, når du ikke er tjekket ud.");
     }
 
   }
