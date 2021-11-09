@@ -33,7 +33,7 @@ class _EmployeeListState extends State<EmployeeList> {
       setState(() => _employees = response.ordered );
     }
 
-    Timer(const Duration(minutes: 1), _updateEmployees);
+    Timer(const Duration(seconds: 30), _updateEmployees);
   }
 
   @override
