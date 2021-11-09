@@ -1,13 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:neocheckin/components/cancel_button.dart';
 import 'package:neocheckin/components/cancel_button_list.dart';
 import 'package:neocheckin/components/card_reader_input.dart';
 import 'package:neocheckin/components/clock_time.dart';
 import 'package:neocheckin/components/flex_and_option_display.dart';
 import 'package:neocheckin/components/employee_list.dart';
 import 'package:neocheckin/models/option.dart';
-import 'package:neocheckin/models/employee.dart';
+import 'package:neocheckin/state_manager.dart';
 import 'package:neocheckin/utils/config.dart';
 import 'package:neocheckin/utils/http_requests/card_scanned.dart';
 import 'package:neocheckin/utils/http_requests/get_updated_options.dart';
@@ -46,39 +45,30 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  final List<CancelButtonController> _cancelButtons = [];
-  List<Option> _options = [];
-  Option _optionSelected = NullOption();
-  Option _priorityOption = NullOption();
-  Employee _activeEmployee = NullEmployee();
+class _HomePageState extends State<HomePage> implements StateManagable {
+  late StateManager _stateManager;
 
-  void _setOption(Option option) => setState(() => _optionSelected = option );
-  void _setEmployee(Employee employee) => setState(() => _activeEmployee = employee );
+  @override
+  void refreshState() {setState((){});}
 
-  void _updateOptions() async {
-    List<Option> updated = await getUpdatedOptions(_options, context);
-    bool isIdentical = optionsAreIdentical(_options, updated);
-    if (!isIdentical) {
-      Option priorityOption = getPriorityOption(updated);
-      setState(() {
-        _options = updated;
-        _priorityOption = priorityOption;
-        _optionSelected = priorityOption;
-      });
+  void updateOptions() async {
+    List<Option>? updated = await getUpdatedOptions(context);
+    if (updated != null) {
+      bool isIdentical = optionsAreIdentical(_stateManager.options, updated);
+      if (!isIdentical) {
+        _stateManager.options = updated;
+        _stateManager.setPriorityOrNullOption();
+      }
     }
 
-    Timer(const Duration(minutes: 1), _updateOptions);
+    Timer(const Duration(minutes: 1), updateOptions);
   }
-  void _addCancelButton(CancelButtonController controller) =>
-    setState(() => _cancelButtons.add(controller));
-  void _removeCancelButton(CancelButtonController controller) =>
-    setState(() => _cancelButtons.removeWhere((p) => p == controller));
 
   @override
   void initState() {
     super.initState();
-    _updateOptions();
+    _stateManager = StateManager(state: this);
+    updateOptions();
     configFileExists(context);
   }
 
@@ -88,16 +78,12 @@ class _HomePageState extends State<HomePage> {
     children: [
       GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onTap: () => _setOption(_priorityOption),
+        onTap: () => { _stateManager.setPriorityOrNullOption() },
         child: Row(
           children: [
-            constrainedCancelButtonList(_cancelButtons, _removeCancelButton),
+            constrainedCancelButtonList(_stateManager),
             UserDisplay(
-              employee: _activeEmployee,
-              setEmployee: _setEmployee,
-              optionSelected: _optionSelected,
-              options: _options,
-              setOption: _setOption,
+              stateManager: _stateManager,
             ),
             constrainedEmployeeList(),
           ],
@@ -106,15 +92,10 @@ class _HomePageState extends State<HomePage> {
       cornerTimer(),
       CardReaderInput(
         onSubmitted: (String rfid) {
-          // ¯\_(ツ)_/¯
           cardReaderSubmit(
             rfid: rfid, 
-            optionSelected: _optionSelected, 
+            stateManager: _stateManager, 
             errorContext: context, 
-            addCancelButton: _addCancelButton,
-            removeCancelButton: _removeCancelButton,
-            setEmployee: _setEmployee,
-            resetSelected: () => _setOption(_priorityOption)
           ); 
         }
       ),

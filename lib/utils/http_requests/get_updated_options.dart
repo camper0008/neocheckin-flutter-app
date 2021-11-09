@@ -4,7 +4,7 @@ import 'package:neocheckin/responses/options.dart';
 import 'package:neocheckin/utils/config.dart';
 import 'package:neocheckin/utils/http_request.dart';
 
-Option getPriorityOption(List<Option> options) {
+Option getPriorityOrNullOption(List<Option> options) {
   Option priorityOption = NullOption();
   for (int i = 0; i < options.length; ++i) {
     if (options[i].available == OptionAvailable.priority) {
@@ -26,14 +26,12 @@ bool optionsAreIdentical(List<Option> previous, List<Option> current) {
   return isIdentical;
 }
 
-Future<List<Option>> getUpdatedOptions(List<Option> previousOptions, BuildContext context) async {
+Future<List<Option>?> getUpdatedOptions(BuildContext context) async {
   String url = await cacheUrl;
 
   Map<String, dynamic> body = await HttpRequest.httpGet(url + '/options', context);
   OptionsResponse response = OptionsResponse.fromJson(body);
   if (response.error == 'none') {
     return response.options;
-  } else {
-    return previousOptions;
   }
 }

@@ -5,6 +5,7 @@ import 'package:neocheckin/models/employee.dart';
 import 'package:neocheckin/models/option.dart';
 import 'package:neocheckin/models/timestamp.dart';
 import 'package:neocheckin/responses/employee.dart';
+import 'package:neocheckin/state_manager.dart';
 import 'package:neocheckin/utils/config.dart';
 import 'package:neocheckin/utils/display_error.dart';
 import 'package:neocheckin/utils/http_request.dart';
@@ -40,29 +41,27 @@ Future<Employee> _getEmployeeFromRfid(String rfid, BuildContext context) async {
 
 cardReaderSubmit({
   required BuildContext errorContext, required String rfid, 
-  required Option optionSelected, required Function() resetSelected,
-  required Function(Employee) setEmployee,
-  required Function(CancelButtonController) addCancelButton, required Function(CancelButtonController) removeCancelButton,
+  required StateManager stateManager,
 }) async {
-  if (optionSelected is NullOption) return displayError(errorContext, "Du skal vælge en mulighed.");
+  if (stateManager.activeOption is NullOption) return displayError(errorContext, "Du skal vælge en mulighed.");
   if (rfid == '') return displayError(errorContext, "Tekstfelt tom.");
 
   Employee employee = await _getEmployeeFromRfid(rfid, errorContext);
   if (employee is! NullEmployee) {
-    if (!employee.working && optionSelected.category == "check in" || 
-         employee.working && optionSelected.category == "check out") {
-      setEmployee(employee);
-      addCancelButton(
+    if (!employee.working && stateManager.activeOption.category == "check in" || 
+         employee.working && stateManager.activeOption.category == "check out") {
+      stateManager.activeEmployee = employee;
+      stateManager.addCancelButton(
         CancelButtonController(
           duration: 10,
-          action: optionSelected.displayName.toLowerCase() + ' for ' + employee.name.split(' ')[0],
+          action: stateManager.activeOption.displayName.toLowerCase() + ' for ' + employee.name.split(' ')[0],
           callback: () =>
             _sendCardScanRequest(
               errorContext: errorContext,
               rfid: rfid, 
-              option: optionSelected, 
+              option: stateManager.activeOption, 
             ),
-          unmountCallback: removeCancelButton,
+          unmountCallback: stateManager.removeCancelButton,
         )
       );
     } else if (!employee.working) {
@@ -72,5 +71,5 @@ cardReaderSubmit({
     }
 
   }
-  resetSelected();
+  stateManager.setPriorityOrNullOption();
 }

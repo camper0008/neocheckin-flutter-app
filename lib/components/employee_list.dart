@@ -23,7 +23,7 @@ class EmployeeList extends StatefulWidget {
 
 class _EmployeeListState extends State<EmployeeList> {
 
-  late Map<String, List<Employee>> _employees;
+  Map<String, List<Employee>> _employees = {};
 
   void _updateEmployees() async {
     String url = await cacheUrl;
