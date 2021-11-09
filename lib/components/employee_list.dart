@@ -47,33 +47,40 @@ class _EmployeeListState extends State<EmployeeList> {
     _updateEmployees();
   }
 
+  Widget _getDepartmentText(String name)
+    => Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Text(
+        name,
+        textAlign: TextAlign.center,
+        style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+      ),
+    );
+
+  List<Widget> _getEmployees(List<Employee> employees)
+    => employees.map((employee) => 
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: Text(
+          employee.name,
+          textAlign: TextAlign.left,
+          style: const TextStyle(fontSize: 28),
+        ),
+      ),
+    ).toList();
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       controller: ScrollController(),
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: _employees.entries.map((department) => 
           Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: Text(
-                  department.key,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-                ),
-              ),
-              ...department.value.map((employee) => 
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4),
-                  child: Text(
-                    employee.name,
-                    textAlign: TextAlign.left,
-                    style: const TextStyle(fontSize: 28),
-                  ),
-                ),
-              ).toList()
+              _getDepartmentText(department.key),
+              ..._getEmployees(department.value),
             ]
           )
         ).toList()
