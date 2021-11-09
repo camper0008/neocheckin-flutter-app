@@ -1,10 +1,21 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:neocheckin/components/constrained_sidebar.dart';
 import 'package:neocheckin/models/employee.dart';
+import 'package:neocheckin/responses/employees_working.dart';
+import 'package:neocheckin/utils/config.dart';
+import 'package:neocheckin/utils/http_request.dart';
+
+ConstrainedSidebar constrainedEmployeeList()
+  => const ConstrainedSidebar(
+    child: Padding(
+      padding: EdgeInsets.only(right: 16),
+      child: EmployeeList(),
+    ),
+  );
 
 class EmployeeList extends StatefulWidget {
-  final Map<String, List<Employee>> employees;
-
-  const EmployeeList({Key? key, required this.employees}) : super(key: key);
+  const EmployeeList({Key? key}) : super(key: key);
 
   @override
   State<EmployeeList> createState() => _EmployeeListState();
@@ -14,19 +25,25 @@ class _EmployeeListState extends State<EmployeeList> {
 
   late Map<String, List<Employee>> _employees;
 
-  _updateSelfState(Map<String, List<Employee>> employees) {
-    _employees = employees;
+  void _updateEmployees() async {
+    Map<String, dynamic> body = await HttpRequest.httpGet((await config)["CACHE_URL"]! + '/employees/working', context);
+    EmployeesWorkingResponse response = EmployeesWorkingResponse.fromJson(body);
+    if (response.error == 'none') {
+      setState(() => _employees = response.ordered );
+    }
+
+    Timer(const Duration(minutes: 1), _updateEmployees);
   }
 
   @override
   void initState() {
     super.initState();
-    _updateSelfState(widget.employees);
+    _updateEmployees();
   }
   @override
   void didUpdateWidget(EmployeeList oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _updateSelfState(widget.employees);
+    _updateEmployees();
   }
 
   @override
@@ -51,7 +68,7 @@ class _EmployeeListState extends State<EmployeeList> {
                   padding: const EdgeInsets.symmetric(vertical: 4),
                   child: Text(
                     employee.name,
-                    textAlign: TextAlign.center,
+                    textAlign: TextAlign.left,
                     style: const TextStyle(fontSize: 28),
                   ),
                 ),
