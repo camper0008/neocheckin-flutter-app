@@ -25,14 +25,15 @@ _sendCardScanRequest({
     "systemId": (await config)["SYSTEM_ID"],
     "timestamp": timestamp.isoDate,
   };
-  await HttpRequest.httpPost((await config)["CACHE_URL"]! + '/employee/cardscanned', httpReq, errorContext);
+
+  String url = await cacheUrl;
+  await HttpRequest.httpPost(url + '/employee/cardscanned', httpReq, errorContext);
 }
 
 Future<Employee> _getEmployeeFromRfid(String rfid, BuildContext context) async {
-  String cacheUrl = (await config)["CACHE_URL"]!;
+  String url = await cacheUrl;
 
-
-  Map<String, dynamic> body = await HttpRequest.httpGet(cacheUrl + '/employee/$rfid', context);
+  Map<String, dynamic> body = await HttpRequest.httpGet(url + '/employee/$rfid', context);
   EmployeeResponse response = EmployeeResponse.fromJson(body);
   return response.employee;
 }

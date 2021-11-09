@@ -27,7 +27,9 @@ bool optionsAreIdentical(List<Option> previous, List<Option> current) {
 }
 
 Future<List<Option>> getUpdatedOptions(List<Option> previousOptions, BuildContext context) async {
-  Map<String, dynamic> body = await HttpRequest.httpGet((await config)["CACHE_URL"]! + '/options', context);
+  String url = await cacheUrl;
+
+  Map<String, dynamic> body = await HttpRequest.httpGet(url + '/options', context);
   OptionsResponse response = OptionsResponse.fromJson(body);
   if (response.error == 'none') {
     return response.options;
