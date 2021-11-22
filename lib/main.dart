@@ -68,7 +68,7 @@ class _HomePageState extends State<HomePage> implements StateManagable {
     _stateManager = StateManager(state: this);
     _updateOptions();
     configFileExists(context);
-    Timer.periodic(const Duration(minutes: 1), (Timer t) {_updateOptions();});
+    Timer.periodic(const Duration(seconds: 15), (Timer t) {_updateOptions();});
   }
 
   @override
