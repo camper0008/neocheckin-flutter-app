@@ -35,6 +35,35 @@ class FlexDisplay extends StatelessWidget {
     return isNegative ? Colors.red : Colors.green;
   }
 
+  Text get _flexText =>
+    Text.rich(
+      TextSpan(
+        style: const TextStyle(fontSize: (14*2.25)),
+        children: <TextSpan>[
+          const TextSpan(
+            text: 'Flex: '
+          ),
+          TextSpan(
+            text: _flexPrefix + stateManager.activeEmployee.flex.getFormattedHours(),
+            style: TextStyle(
+              color: _flexColor,
+              fontFamily: 'RobotoMono',
+            ),
+          ),
+          const TextSpan(
+            text: ':',
+          ),
+          TextSpan(
+            text: stateManager.activeEmployee.flex.getFormattedMinutes(), 
+            style: TextStyle(
+              color: _flexColor,
+              fontFamily: 'RobotoMono',
+            ),
+          ),
+        ],
+      ),
+    );
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -70,33 +99,7 @@ class FlexDisplay extends StatelessWidget {
                       fontSize: (14*2.25),
                     ),
                   ),
-                  Text.rich(
-                    TextSpan(
-                      style: const TextStyle(fontSize: (14*2.25)),
-                      children: <TextSpan>[
-                        const TextSpan(
-                          text: 'Flex: '
-                        ),
-                        TextSpan(
-                          text: _flexPrefix + stateManager.activeEmployee.flex.getFormattedHours(),
-                          style: TextStyle(
-                            color: _flexColor,
-                            fontFamily: 'RobotoMono',
-                          ),
-                        ),
-                        const TextSpan(
-                          text: ':',
-                        ),
-                        TextSpan(
-                          text: stateManager.activeEmployee.flex.getFormattedMinutes(), 
-                          style: TextStyle(
-                            color: _flexColor,
-                            fontFamily: 'RobotoMono',
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  _flexText
                 ],
               ),
             ),
