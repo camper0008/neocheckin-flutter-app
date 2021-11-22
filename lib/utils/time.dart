@@ -3,6 +3,7 @@ class Time {
   Time({int seconds = 0, int minutes = 0, int hours = 0}) {
     time = seconds + minutes*60 + hours*60*60;
   }
+  Time.now() : time = DateTime.now().millisecondsSinceEpoch ~/ 1000;
 
   void setSeconds(int seconds) {
     time = seconds;

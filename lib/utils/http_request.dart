@@ -26,9 +26,9 @@ class HttpRequest {
         Map<String, dynamic> decoded = json.decode(response.body);
         throw Exception('GET \'$url\' failed: ' + decoded['error'].toString());
       }
-    } catch(err) {
-      displayError(errorContext, err.toString());
-      return json.decode("{ \"error\": \"$err\" }");
+    } catch(err, trace) {
+      displayError(errorContext, "$err\n$trace");
+      return json.decode("{ \"error\": \"error occured\" }");
     }
   }
   static Future<Map<String, dynamic>> httpPost(String url, dynamic body, BuildContext errorContext) async {
@@ -52,9 +52,9 @@ class HttpRequest {
         Map<String, dynamic> decoded = json.decode(response.body);
         throw Exception('POST \'$url\' failed: ' + decoded['error'].toString());
       }
-    } catch(err) {
-      displayError(errorContext, err.toString());
-      return json.decode("{ \"error\": \"$err\" }");
+    } catch(err, trace) {
+      displayError(errorContext, "$err\n$trace");
+      return json.decode("{ \"error\": \"error occured\" }");
     }
   }
 }

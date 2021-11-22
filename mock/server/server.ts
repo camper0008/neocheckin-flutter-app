@@ -36,16 +36,16 @@ enum OptionAvailable {
 const options: Option[] = [
     {
         id: 0,
-        name: 'Check ud',
-        displayName: 'Check ud',
+        name: 'Tjek ud',
+        displayName: 'Tjek ud',
         category: 'check out',
         available: OptionAvailable.PRIORITY,
     },
     {
         id: 1,
-        name: 'Gåtur',
-        displayName: 'Gåtur',
-        category: 'check out',
+        name: 'Tjek ind',
+        displayName: 'Tjek ind',
+        category: 'check in',
         available: OptionAvailable.AVAILABLE,
     },
     {
@@ -54,13 +54,6 @@ const options: Option[] = [
         displayName: 'Efter aftale',
         category: 'check out',
         available: OptionAvailable.AVAILABLE,
-    },
-    {
-        id: 3,
-        name: 'Biblioteksvagt',
-        displayName: 'Biblioteksvagt',
-        category: 'check out',
-        available: OptionAvailable.NOT_AVAILABLE,
     },
 ]
 
@@ -121,7 +114,7 @@ const server = () => {
         if (req.body.option === null || req.body.option === undefined) 
             return res.status(400).json({ error: 'option not given' })
 
-        db[employeeRfid].working = req.body.option == 0;
+        db[employeeRfid].working = req.body.option.category == "check in";
         
         return res.status(200).json({ employee: db[employeeRfid] });
     });
@@ -160,7 +153,7 @@ const server = () => {
     });
 
     app.listen(5000, () => {
-        console.log('server started')
+        console.log('server started on port', 5000)
     })
 }
 

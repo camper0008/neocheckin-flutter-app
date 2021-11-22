@@ -28,5 +28,13 @@ Future<Map<String, String>> get config async {
   } catch (err) {
     throw Exception("could not load settings.conf");
   }
+}
 
+Future <String> get cacheUrl async {
+  String? url = (await config)["CACHE_URL"];
+  if (url == null) {
+    return "";
+  } else {
+    return url;
+  }
 }

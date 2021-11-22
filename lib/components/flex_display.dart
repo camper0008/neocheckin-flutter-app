@@ -1,76 +1,78 @@
-import 'dart:async';
 import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:neocheckin/models/employee.dart';
+import 'package:neocheckin/state_manager.dart';
 
-class FlexDisplay extends StatefulWidget {
-  final Employee employee;
-  final void Function(Employee) setEmployee;
-
-  const FlexDisplay({Key? key, required this.employee, required this.setEmployee}) : super(key: key);
-
-  @override
-  State<FlexDisplay> createState() => _FlexDisplayState();
+Image _getImageFromBase64(String base64) {
+  return Image.memory(
+    base64Decode(base64),
+    gaplessPlayback: true,
+    width: 240,
+    height: 320,
+    errorBuilder: (BuildContext context, Object object, StackTrace? trace) {
+      return Image.asset(
+        "assets/images/placeholder.png",
+        width: 240,
+        height: 320,
+      );
+    },
+  );
 }
 
-class _FlexDisplayState extends State<FlexDisplay> {
-  late String _flexPrefix;
-  late Color _flexColor;
-  late Employee _employee;
-  late Timer _resetTimer;
 
-  _updateSelfState(Employee employee) {
-    _employee = employee;
+class FlexDisplay extends StatelessWidget {
+  final StateManager stateManager;
 
-    bool isNegative = _employee.flex.isNegative();
-    _flexPrefix = isNegative ? '-' : '+';
-    _flexColor = isNegative ? Colors.red : Colors.green;
+  const FlexDisplay({Key? key, required this.stateManager}) : super(key: key);
+
+  String get _flexPrefix {
+    bool isNegative = stateManager.activeEmployee.flex.isNegative();
+    return isNegative ? '-' : '+';
   }
-  Image _getImageFromBase64(String base64) {
-    return Image.memory(
-      base64Decode(base64),
-      gaplessPlayback: true,
-      width: 240,
-      height: 320,
-      errorBuilder: (BuildContext context, Object object, StackTrace? trace) {
-        return Image.asset(
-          "assets/images/placeholder.png",
-          width: 240,
-          height: 320,
-        );
-      },
+
+  Color get _flexColor {
+    bool isNegative = stateManager.activeEmployee.flex.isNegative();
+    return isNegative ? Colors.red : Colors.green;
+  }
+
+  Text get _flexText =>
+    Text.rich(
+      TextSpan(
+        style: const TextStyle(fontSize: (14*2.25)),
+        children: <TextSpan>[
+          const TextSpan(
+            text: 'Flex: '
+          ),
+          TextSpan(
+            text: _flexPrefix + stateManager.activeEmployee.flex.getFormattedHours(),
+            style: TextStyle(
+              color: _flexColor,
+              fontFamily: 'RobotoMono',
+            ),
+          ),
+          const TextSpan(
+            text: ':',
+          ),
+          TextSpan(
+            text: stateManager.activeEmployee.flex.getFormattedMinutes(), 
+            style: TextStyle(
+              color: _flexColor,
+              fontFamily: 'RobotoMono',
+            ),
+          ),
+        ],
+      ),
     );
-  }
 
   @override
-  void initState() {
-    super.initState();
-    _updateSelfState(widget.employee);
-    _resetTimer = Timer(const Duration(seconds: 5), (){widget.setEmployee(NullEmployee());});
-  }
-  @override
-  void didUpdateWidget(FlexDisplay oldWidget) {
-    if (
-      oldWidget.employee.name != widget.employee.name &&
-      oldWidget.employee.working != widget.employee.working
-    ) {
-      _resetTimer.cancel();
-      _resetTimer = Timer(const Duration(seconds: 5), (){widget.setEmployee(NullEmployee());});
-      super.didUpdateWidget(oldWidget);
-      _updateSelfState(widget.employee);
-    }
-  }
-
-  @override
-  Widget build(BuildContext build) {
+  Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Padding(
           padding: const EdgeInsets.only(bottom: 36),
           child: Text(
-            (_employee.working ? 'Du er nu checket ud' : 'Du er nu checket ind'),
+            (stateManager.activeEmployee.working ? 'Du er nu tjekket ud' : 'Du er nu tjekket ind'),
             style: const TextStyle(
               fontSize: (14*3),
             ),
@@ -82,14 +84,14 @@ class _FlexDisplayState extends State<FlexDisplay> {
           children: [
             Padding(
               padding: const EdgeInsets.only(right: 40),
-              child: _getImageFromBase64(_employee.photo)
+              child: _getImageFromBase64(stateManager.activeEmployee.photo)
             ),
             Flexible(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    _employee.name,
+                    stateManager.activeEmployee.name,
                     softWrap: true,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 7,
@@ -97,33 +99,7 @@ class _FlexDisplayState extends State<FlexDisplay> {
                       fontSize: (14*2.25),
                     ),
                   ),
-                  Text.rich(
-                    TextSpan(
-                      style: const TextStyle(fontSize: (14*2.25)),
-                      children: <TextSpan>[
-                        const TextSpan(
-                          text: 'Flex: '
-                        ),
-                        TextSpan(
-                          text: _flexPrefix + _employee.flex.getFormattedHours(),
-                          style: TextStyle(
-                            color: _flexColor,
-                            fontFamily: 'RobotoMono',
-                          ),
-                        ),
-                        const TextSpan(
-                          text: ':',
-                        ),
-                        TextSpan(
-                          text: _employee.flex.getFormattedMinutes(), 
-                          style: TextStyle(
-                            color: _flexColor,
-                            fontFamily: 'RobotoMono',
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  _flexText
                 ],
               ),
             ),
@@ -132,4 +108,5 @@ class _FlexDisplayState extends State<FlexDisplay> {
       ],
     );
   }
+
 }
