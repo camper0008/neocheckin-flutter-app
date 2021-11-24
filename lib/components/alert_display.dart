@@ -11,7 +11,7 @@ class AlertDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    playAlert();
+    playAlert(context);
     return AlertDialog(
       title: title,
       content: SingleChildScrollView(
