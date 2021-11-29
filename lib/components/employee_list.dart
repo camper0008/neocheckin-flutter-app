@@ -74,7 +74,7 @@ class _EmployeeListState extends State<EmployeeList> {
     return SingleChildScrollView(
       controller: ScrollController(),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.start,
         children: _employees.entries.map((department) => 
           Column(
