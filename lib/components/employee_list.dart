@@ -61,15 +61,10 @@ class _EmployeeListState extends State<EmployeeList> {
     => employees.map((employee) => 
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 4),
-        child: Flex(
-          direction: Axis.horizontal,
-          children: [
-            Text(
-              employee.name,
-              textAlign: TextAlign.left,
-              style: const TextStyle(fontSize: 28),
-            ),
-          ],
+        child: Text(
+          employee.name,
+          textAlign: TextAlign.left,
+          style: const TextStyle(fontSize: 28),
         ),
       ),
     ).toList();
@@ -83,6 +78,7 @@ class _EmployeeListState extends State<EmployeeList> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: _employees.entries.map((department) => 
           Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               _getDepartmentText(department.key),
               ..._getEmployees(department.value),
