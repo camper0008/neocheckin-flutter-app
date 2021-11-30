@@ -59,7 +59,6 @@ class _ClockState extends State<Clock> {
           ":" + _clockTime.getFormattedSeconds(),
           style: const TextStyle(
             fontSize: 44,
-            backgroundColor: Colors.white,
           ),
         ),
       ),
