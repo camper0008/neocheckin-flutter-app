@@ -115,6 +115,8 @@ const server = () => {
             return res.status(400).json({ error: 'option not given' })
 
         db[employeeRfid].working = req.body.option.category == "check in";
+
+        console.log(`Employee ${db[employeeRfid].name} scanned card at ${req.body.timestamp}`)
         
         return res.status(200).json({ employee: db[employeeRfid] });
     });
