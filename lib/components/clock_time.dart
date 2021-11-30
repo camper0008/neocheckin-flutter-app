@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:neocheckin/models/timestamp.dart';
 import 'package:neocheckin/utils/http_requests/get_timestamp.dart';
 import 'package:neocheckin/utils/time.dart';
@@ -24,7 +23,7 @@ class _ClockState extends State<Clock> {
   Time _clockTime = Time();
 
   void _recalibrateClockTime() async {
-    Timestamp result = await getUpdatedTimestamp(context);
+    Timestamp result = await getUpdatedLocalTimestamp(context);
     _clockTime = Time(hours: result.hour, minutes: result.minute, seconds: result.seconds);
     _initialTime = _clockTime.getSeconds();
 
@@ -60,7 +59,6 @@ class _ClockState extends State<Clock> {
           ":" + _clockTime.getFormattedSeconds(),
           style: const TextStyle(
             fontSize: 44,
-            backgroundColor: Colors.white,
           ),
         ),
       ),

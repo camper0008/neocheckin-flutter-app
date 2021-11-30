@@ -21,11 +21,12 @@ class _OptionDisplayState extends State<OptionDisplay> {
     _stateManager = widget.stateManager;
   }
 
-  Widget _optionsButton(Option option, ColorScheme colorScheme) =>
-    ElevatedButton(
+  Widget _optionsButton(Option option, ColorScheme colorScheme) {
+    Color darkenedPrimary = HSLColor.fromColor(colorScheme.primary).withLightness(0.4).toColor();
+    return ElevatedButton(
       style: ElevatedButton.styleFrom(
         elevation: (option.id == _stateManager.activeOption.id) ? 8 : 0,
-        primary: (option.id == _stateManager.activeOption.id) ? colorScheme.primary : colorScheme.primaryVariant,
+        primary: (option.id == _stateManager.activeOption.id) ? colorScheme.primary : darkenedPrimary,
       ),
       onPressed: () {_stateManager.activeOption = option;},
       child: Padding(
@@ -38,6 +39,7 @@ class _OptionDisplayState extends State<OptionDisplay> {
         ),
       ),
     );
+  }
 
   @override
   Widget build(BuildContext context) {
