@@ -16,7 +16,7 @@ _sendCardScanRequest({
   required BuildContext errorContext, required String rfid, 
   required Option option
 }) async {
-  Timestamp timestamp = await getUpdatedTimestamp(errorContext);
+  Timestamp timestamp = await getUpdatedUTCTimestamp(errorContext);
 
   Map<String, dynamic> httpReq = {
     "employeeRfid": rfid,

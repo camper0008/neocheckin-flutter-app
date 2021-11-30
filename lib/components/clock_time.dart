@@ -23,7 +23,7 @@ class _ClockState extends State<Clock> {
   Time _clockTime = Time();
 
   void _recalibrateClockTime() async {
-    Timestamp result = await getUpdatedTimestamp(context);
+    Timestamp result = await getUpdatedLocalTimestamp(context);
     _clockTime = Time(hours: result.hour, minutes: result.minute, seconds: result.seconds);
     _initialTime = _clockTime.getSeconds();
 
