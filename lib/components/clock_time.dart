@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:neocheckin/models/timestamp.dart';
 import 'package:neocheckin/utils/http_requests/get_timestamp.dart';
 import 'package:neocheckin/utils/time.dart';

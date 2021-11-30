@@ -25,7 +25,7 @@ class _OptionDisplayState extends State<OptionDisplay> {
     ElevatedButton(
       style: ElevatedButton.styleFrom(
         elevation: (option.id == _stateManager.activeOption.id) ? 8 : 0,
-        primary: (option.id == _stateManager.activeOption.id) ? colorScheme.primary : colorScheme.primaryVariant,
+        primary: (option.id == _stateManager.activeOption.id) ? colorScheme.primary : colorScheme.primaryContainer,
       ),
       onPressed: () {_stateManager.activeOption = option;},
       child: Padding(
