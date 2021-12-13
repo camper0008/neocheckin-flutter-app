@@ -50,16 +50,17 @@ cardReaderSubmit({
   if (employee is! NullEmployee) {
     if (!employee.working && stateManager.activeOption.category == "check in" || 
          employee.working && stateManager.activeOption.category == "check out") {
-      stateManager.activeEmployee = employee;
+      Option activeOption = stateManager.activeOption; // to dereference
+      stateManager.activeEmployee = employee; 
       stateManager.addCancelButton(
         CancelButtonController(
           duration: 10,
-          action: stateManager.activeOption.displayName.toLowerCase() + ' for ' + employee.name.split(' ')[0],
+          action: activeOption.displayName.toLowerCase() + ' for ' + employee.name.split(' ')[0],
           callback: () =>
             _sendCardScanRequest(
               errorContext: errorContext,
               rfid: rfid, 
-              option: stateManager.activeOption, 
+              option: activeOption,
             ),
           unmountCallback: stateManager.removeCancelButton,
         )
